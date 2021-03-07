@@ -3,13 +3,13 @@ package Main;
 
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.image.ImageProducer;
-import java.net.URL;
 
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 public class GameObject extends JPanel{
 	Vector2 postion;
+	Vector2 size;
 	Image image;
 	boolean show = true;
 	
@@ -17,54 +17,46 @@ public class GameObject extends JPanel{
 	{
 		postion = new Vector2(x,y);
 		this.image = img;
+		//ImageIcon icon = new ImageIcon;
+		size = new Vector2(image.getWidth(this), image.getHeight(this));
 	}
 	
 	GameObject(Image img, int x, int y)
 	{
 		postion = new Vector2(x,y);
 		this.image = img;
+		size = new Vector2(image.getWidth(this), image.getHeight(this));
 	}
 	
 	GameObject(Image img, Vector2 v)
 	{
 		postion = v;
 		this.image = img;
+		size = new Vector2(image.getWidth(this), image.getHeight(this));
 	}
 	
 	GameObject(String img, float x, float y)
 	{
 		postion = new Vector2(x,y);
-		URL url=this.getClass().getResource(img);
-		System.out.println(url);
-		try {
-			image = createImage((ImageProducer) url.getContent());
-		}catch(Exception ex){
-			image = null;
-		}
+		image = String2Image.getImage(img);
+		ImageIcon icon = new ImageIcon(image);
+		size = new Vector2(icon.getIconWidth(), icon.getIconHeight());
 	}
 	
 	GameObject(String img, int x, int y)
 	{
 		postion = new Vector2(x,y);
-		URL url=this.getClass().getResource(img);
-		System.out.println(url);
-		try {
-			image = createImage((ImageProducer) url.getContent());
-		}catch(Exception ex){
-			image = null;
-		}
+		image = String2Image.getImage(img);
+		ImageIcon icon = new ImageIcon(image);
+		size = new Vector2(icon.getIconWidth(), icon.getIconHeight());
 	}
 	
 	GameObject(String img, Vector2 v)
 	{
 		postion = v;
-		URL url=this.getClass().getResource(img);
-		System.out.println(url);
-		try {
-			image = createImage((ImageProducer) url.getContent());
-		}catch(Exception ex){
-			image = null;
-		}
+		image = String2Image.getImage(img);
+		ImageIcon icon = new ImageIcon(image);
+		size = new Vector2(icon.getIconWidth(), icon.getIconHeight());
 	}
 	
 	
@@ -72,7 +64,7 @@ public class GameObject extends JPanel{
 	{
 		super.paintComponent(g);
 		if(show)
-			g.drawImage(image, (int)postion.x, (int)postion.y, this);
+			g.drawImage(image, (int)(postion.x - size.x / 2), (int)(postion.y - size.y / 2), this);
 	}
 	
 	//指定した数値分移動します

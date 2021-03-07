@@ -42,7 +42,7 @@ public class Text {
 				y += fm.getMaxAscent();
 				break;
 			case Bottom:
-				y -= rect.height + fm.getMaxAscent();
+				y -= fm.getMaxAscent() / 2;//2で割ったほうがちょうどよい
 				break;
 		}
 		g.drawString(text, x, y);
@@ -80,7 +80,7 @@ public class Text {
 				y += fm.getMaxAscent();
 				break;
 			case Bottom:
-				y -= rect.height + fm.getMaxAscent();
+				y -= fm.getMaxAscent()/ 2;
 				break;
 		}
 		

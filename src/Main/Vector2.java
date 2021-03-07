@@ -60,4 +60,8 @@ public class Vector2 {
 		return (float)Math.sqrt(v1.x + v1.y);
 	}
 	
+	String ToString()
+	{
+		return "(" + x + "," + y + ")";
+	}
 }

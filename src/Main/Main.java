@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 //メインクラス
 public class Main{
 	public static void main(String[] args) {
-		GameWindow gw = new GameWindow("テストウィンドウ",800,500);
+		GameWindow gw = new GameWindow("ボス戦シューティング",800,500);
 		gw.add(new DrawCanvas());
 		gw.setVisible(true);
 		gw.StartGameLoop();
@@ -23,7 +23,7 @@ class GameWindow extends JFrame implements Runnable{
 	public GameWindow(String title, int width, int height) {
 		super(title);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(width,height);
+		setSize(width + 6,height + 29);
 		setLocationRelativeTo(null);
 		setResizable(false);
 		addKeyListener(new KeyInput());
@@ -60,7 +60,8 @@ class GameWindow extends JFrame implements Runnable{
 }
 
 class DrawCanvas extends JPanel{
-	GameObject player = new GameObject("PlayerFly001.png",1,1);
+	GameObject player = new GameObject("PlayerFly001.png",0,0);
+	float playerSpeed = 2.0f;
 	Button btn = new Button("mapchip.png","スタート",200,200,400,100);
 	public void paintComponent(Graphics g) 
 	{
@@ -72,10 +73,11 @@ class DrawCanvas extends JPanel{
 	
 	void Update(Graphics g)
 	{
+		Font font;
 		switch(SceneManager.currentScene)
 		{
 			case Title:
-				Font font = new Font("ＭＳ Ｐゴシック",Font.BOLD,64);
+				font = new Font("ＭＳ Ｐゴシック",Font.BOLD,64);
 				g.setFont(font);
 				Text.drawString(g,"ボス戦シューティング",400, 10, Text.AdjustWidth.Center);
 				
@@ -89,17 +91,44 @@ class DrawCanvas extends JPanel{
 				Text.drawString(g,"©2021 - Ho'pe",400, 500, Text.AdjustWidth.Center,Text.AdjustHeight.Bottom);
 				break;
 			case Game:
+				//デバッグ
 				Text.drawString(g,"ゲーム中",400, 0, Text.AdjustWidth.Center);
 				if(KeyInput.inputKey[KeyEvent.VK_P]) SceneManager.nextScene = SceneManager.Scene.Clear;
 				if(KeyInput.inputKey[KeyEvent.VK_O]) SceneManager.nextScene = SceneManager.Scene.GameOver;
+				
+				/*
+				 * プレイヤー
+				 */
+				//移動
+				if(KeyInput.inputKey[KeyEvent.VK_W]) player.postion.y -= playerSpeed;
+				if(KeyInput.inputKey[KeyEvent.VK_A]) player.postion.x -= playerSpeed;
+				if(KeyInput.inputKey[KeyEvent.VK_S]) player.postion.y += playerSpeed;
+				if(KeyInput.inputKey[KeyEvent.VK_D]) player.postion.x += playerSpeed;
+				//移動制限
+				player.postion.x = player.postion.x < 0 ? 0 : player.postion.x;
+				player.postion.x = player.postion.x > 400 ? 400 : player.postion.x;
+				player.postion.y = player.postion.y < 0 ? 0 : player.postion.y;
+				player.postion.y = player.postion.y > 500 ? 500 : player.postion.y;
+				player.DrawObject(g);
+				
 				break;
 			case Clear:
+				font = new Font("ＭＳ Ｐゴシック",Font.BOLD,64);
+				g.setFont(font);
 				Text.drawString(g,"クリア",400, 100, Text.AdjustWidth.Center);
+				
+				font = new Font(null,Font.PLAIN,32);
+				g.setFont(font);
 				btn.DrawButton(g);
 				if(btn.pressed) SceneManager.nextScene = SceneManager.Scene.Title;
 				break;
 			case GameOver:
+				font = new Font("ＭＳ Ｐゴシック",Font.BOLD,64);
+				g.setFont(font);
 				Text.drawString(g,"ゲームオーバー",400, 100, Text.AdjustWidth.Center);
+				
+				font = new Font(null,Font.PLAIN,32);
+				g.setFont(font);
 				btn.DrawButton(g);
 				if(btn.pressed) SceneManager.nextScene = SceneManager.Scene.Title;
 				break;
@@ -122,6 +151,8 @@ class DrawCanvas extends JPanel{
 				btn.text = "スタート";
 				break;
 			case Game:
+				player.postion = new Vector2(200,400);
+				System.out.println(player.size.ToString());
 				break;
 			case Clear:
 				btn.text = "タイトル";
