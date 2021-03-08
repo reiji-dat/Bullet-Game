@@ -62,7 +62,6 @@ public class GameObject extends JPanel{
 	
 	void DrawObject(Graphics g)
 	{
-		super.paintComponent(g);
 		if(show)
 			g.drawImage(image, (int)(postion.x - size.x / 2), (int)(postion.y - size.y / 2), this);
 	}

@@ -60,6 +60,7 @@ class GameWindow extends JFrame implements Runnable{
 }
 
 class DrawCanvas extends JPanel{
+	Mapchip map;
 	GameObject player = new GameObject("PlayerFly001.png",0,0);
 	float playerSpeed = 2.0f;
 	Button btn = new Button("mapchip.png","スタート",200,200,400,100);
@@ -74,6 +75,7 @@ class DrawCanvas extends JPanel{
 	void Update(Graphics g)
 	{
 		Font font;
+		
 		switch(SceneManager.currentScene)
 		{
 			case Title:
@@ -91,6 +93,7 @@ class DrawCanvas extends JPanel{
 				Text.drawString(g,"©2021 - Ho'pe",400, 500, Text.AdjustWidth.Center,Text.AdjustHeight.Bottom);
 				break;
 			case Game:
+				map.DrawMapchip(g);
 				//デバッグ
 				Text.drawString(g,"ゲーム中",400, 0, Text.AdjustWidth.Center);
 				if(KeyInput.inputKey[KeyEvent.VK_P]) SceneManager.nextScene = SceneManager.Scene.Clear;
@@ -151,6 +154,7 @@ class DrawCanvas extends JPanel{
 				btn.text = "スタート";
 				break;
 			case Game:
+				map = new Mapchip();
 				player.postion = new Vector2(200,400);
 				System.out.println(player.size.ToString());
 				break;
