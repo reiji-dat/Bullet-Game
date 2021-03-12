@@ -13,6 +13,7 @@ public class GameObject extends JPanel{
 	Image image;
 	boolean show = true;
 	
+	/*
 	GameObject(Image img, float x, float y)
 	{
 		postion = new Vector2(x,y);
@@ -34,7 +35,7 @@ public class GameObject extends JPanel{
 		this.image = img;
 		size = new Vector2(image.getWidth(this), image.getHeight(this));
 	}
-	
+	*/
 	GameObject(String img, float x, float y)
 	{
 		postion = new Vector2(x,y);
@@ -42,6 +43,33 @@ public class GameObject extends JPanel{
 		ImageIcon icon = new ImageIcon(image);
 		size = new Vector2(icon.getIconWidth(), icon.getIconHeight());
 	}
+	
+	GameObject(String img, float x, float y, float w, float h)
+	{
+		postion = new Vector2(x,y);
+		image = String2Image.getImage(img);
+		ImageIcon icon = new ImageIcon(image);
+		size = new Vector2(icon.getIconWidth() * w, icon.getIconHeight() * h);
+	}
+	
+	GameObject(String img, float x, float y, int w, int h)
+	{
+		postion = new Vector2(x,y);
+		image = String2Image.getImage(img);
+		ImageIcon icon = new ImageIcon(image);
+		size = new Vector2(icon.getIconWidth() * w, icon.getIconHeight() * h);
+	}
+	
+	GameObject(String img, float x, float y, Vector2 size)
+	{
+		postion = new Vector2(x,y);
+		image = String2Image.getImage(img);
+		ImageIcon icon = new ImageIcon(image);
+		this.size = new Vector2(icon.getIconWidth(), icon.getIconHeight());
+		size.times(size);
+	}
+	
+	
 	
 	GameObject(String img, int x, int y)
 	{
@@ -51,6 +79,33 @@ public class GameObject extends JPanel{
 		size = new Vector2(icon.getIconWidth(), icon.getIconHeight());
 	}
 	
+	GameObject(String img, int x, int y, float w, float h)
+	{
+		postion = new Vector2(x,y);
+		image = String2Image.getImage(img);
+		ImageIcon icon = new ImageIcon(image);
+		size = new Vector2(icon.getIconWidth() * w, icon.getIconHeight() * h);
+	}
+	
+	GameObject(String img, int x, int y, int w, int h)
+	{
+		postion = new Vector2(x,y);
+		image = String2Image.getImage(img);
+		ImageIcon icon = new ImageIcon(image);
+		size = new Vector2(icon.getIconWidth() * w, icon.getIconHeight() * h);
+	}
+	
+	GameObject(String img, int x, int y, Vector2 size)
+	{
+		postion = new Vector2(x,y);
+		image = String2Image.getImage(img);
+		ImageIcon icon = new ImageIcon(image);
+		this.size = new Vector2(icon.getIconWidth(), icon.getIconHeight());
+		size.times(size);
+	}
+	
+	
+	
 	GameObject(String img, Vector2 v)
 	{
 		postion = v;
@@ -59,11 +114,37 @@ public class GameObject extends JPanel{
 		size = new Vector2(icon.getIconWidth(), icon.getIconHeight());
 	}
 	
+	GameObject(String img, Vector2 v, float w, float h)
+	{
+		postion = v;
+		image = String2Image.getImage(img);
+		ImageIcon icon = new ImageIcon(image);
+		size = new Vector2(icon.getIconWidth() * w, icon.getIconHeight() * h);
+	}
+	
+	GameObject(String img, Vector2 v, int w, int h)
+	{
+		postion = v;
+		image = String2Image.getImage(img);
+		ImageIcon icon = new ImageIcon(image);
+		size = new Vector2(icon.getIconWidth() * w, icon.getIconHeight() * h);
+	}
+	
+	GameObject(String img, Vector2 v, Vector2 size)
+	{
+		postion = v;
+		image = String2Image.getImage(img);
+		ImageIcon icon = new ImageIcon(image);
+		this.size = new Vector2(icon.getIconWidth(), icon.getIconHeight());
+		size.times(size);
+	}
+	
+	
 	
 	void DrawObject(Graphics g)
 	{
 		if(show)
-			g.drawImage(image, (int)(postion.x - size.x / 2), (int)(postion.y - size.y / 2), this);
+			g.drawImage(image, (int)(postion.x - size.x / 2), (int)(postion.y - size.y / 2), (int)size.x, (int)size.y, this);
 	}
 	
 	//指定した数値分移動します

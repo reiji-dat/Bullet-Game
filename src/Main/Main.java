@@ -66,10 +66,17 @@ class DrawCanvas extends JPanel{
 	GameObject player = new GameObject("PlayerFly001.png",0,0);
 	ArrayList<GameObject> p_Bullet = new ArrayList<>();
 	
+	ArrayList<GameObject> e_Bullet = new ArrayList<>();
+	ArrayList<Vector2> e_Bullet_Speed = new ArrayList<>();
+	final int e_Bullet_Cool = 50;
+	int e_Bullet_Timer = 0;
+	
+	
+	GameObject boss = new GameObject("dragon1.png",0,0,1.5f,1.5f);
+	
 	float playerSpeed = 3;
 	final float P_BulletSpeed = 4;
 	Button btn = new Button("mapchip.png","スタート",200,200,400,100);
-	//Time time = new Time();
 	int mainTimer;
 	int bulletTimer;
 	int score;
@@ -77,6 +84,11 @@ class DrawCanvas extends JPanel{
 	int hp;
 	final int MaxMP = 30;
 	int mp;
+	
+	final int BossMaxHP = 500;
+	int b_hp;
+	int modeTimer = 0;
+	boolean invincibleMode = true;
 
 	public void paintComponent(Graphics g) 
 	{
@@ -107,6 +119,7 @@ class DrawCanvas extends JPanel{
 				Text.drawString(g,"©2021 - Ho'pe",400, 500, Text.AdjustWidth.Center,Text.AdjustHeight.Bottom);
 				break;
 			case Game:
+				System.out.println(Debug.FrameRate());
 				map.DrawMapchip(g);
 				//デバッグ
 				if(KeyInput.inputKey[KeyEvent.VK_P]) SceneManager.nextScene = SceneManager.Scene.Clear;
@@ -129,6 +142,12 @@ class DrawCanvas extends JPanel{
 				g.setFont(font);
 				Text.drawString(g, "HP " + String.format("%2d", hp) + "/" + String.format("%2d", MaxHP), 433,140);
 				Text.drawString(g, "MP " + String.format("%2d", mp) + "/" + String.format("%2d", MaxMP), 433,170);
+				font = new Font("ＭＳ Ｐゴシック",Font.BOLD,48);
+				g.setFont(font);
+				Text.drawString(g, "Dragon", 433,210);
+				font = new Font("ＭＳ Ｐゴシック",Font.PLAIN,32);
+				g.setFont(font);
+				Text.drawString(g, "HP " + String.format("%2d", b_hp) + "/" + String.format("%2d", BossMaxHP), 433,256);
 				
 				
 				/*
@@ -148,12 +167,16 @@ class DrawCanvas extends JPanel{
 				player.DrawObject(g);
 				
 				//弾
-				bulletTimer += Time.flameTime;
-				if(bulletTimer >= 500 && mp < MaxMP)
+				if(bulletTimer < 500)
+				{
+					bulletTimer += Time.flameTime;
+				}
+				else if(mp < MaxMP)
 				{
 					bulletTimer -= 500;
 					mp++;
 				}
+				
 				if(KeyInput.pressedKey[KeyEvent.VK_SPACE] && mp > 0) 
 					{
 						mp--;
@@ -168,16 +191,28 @@ class DrawCanvas extends JPanel{
 					if(p_Bullet.get(i).postion.y < 0 
 					|| p_Bullet.get(i).postion.x < 0 
 					|| p_Bullet.get(i).postion.x > 400) 
-						{
-							p_Bullet.remove(i);
-							continue;
-						}
+					{
+						p_Bullet.remove(i);
+						continue;
+					}
+					if(p_Bullet.get(i).postion.x >= boss.postion.x - boss.size.x / 2
+					&& p_Bullet.get(i).postion.x <= boss.postion.x + boss.size.x / 2
+					&& p_Bullet.get(i).postion.y >= boss.postion.y - boss.size.y / 2
+					&& p_Bullet.get(i).postion.y <= boss.postion.y + boss.size.y / 2
+					&& !invincibleMode)
+					{
+						b_hp--;
+						p_Bullet.remove(i);
+						continue;
+					}
 					p_Bullet.get(i).DrawObject(g);
 					i++;//物を消すと移動処理されないので、消したときは足さずに次のループへ
 				}
+				
 				/*
 				 * 敵
 				 */
+				boss.DrawObject(g);
 				/*
 				 * TODO 敵の挙動
 				 * 動く(上半分限る)5±2秒で動く
@@ -199,7 +234,64 @@ class DrawCanvas extends JPanel{
 				 * 大体5回繰り返す
 				 * クリア
 				 */
+				modeTimer += Time.flameTime;
+				if(invincibleMode)
+				{
+					if(modeTimer >= 25000) 
+					{
+						invincibleMode = !invincibleMode;
+						modeTimer -= 25000;
+					}
+					e_Bullet_Timer += Time.flameTime;
+					if(e_Bullet_Timer >= e_Bullet_Cool)
+					{
+						e_Bullet_Timer -= e_Bullet_Cool;
+						e_Bullet.add(new GameObject("enemy_bullet.png",boss.postion.x,boss.postion.y-10));
+						e_Bullet_Speed.add(new Vector2(Vector2.DegreeToVector((float) ((Math.random() * (360))))));
+						e_Bullet_Speed.get(e_Bullet_Speed.size()-1).times(2);
+					}
+				}
+				else
+				{
+					if(modeTimer >= 10000) 
+					{
+						invincibleMode = !invincibleMode;
+						modeTimer -= 10000;
+					}
+				}
 				
+				for(int i = 0; i < e_Bullet.size();)
+				{
+					
+					e_Bullet.get(i).movePostion(e_Bullet_Speed.get(i));
+					if(e_Bullet.get(i).postion.y < 0 
+					|| e_Bullet.get(i).postion.y > 500
+					|| e_Bullet.get(i).postion.x < 0 
+					|| e_Bullet.get(i).postion.x > 400) 
+					{
+						e_Bullet.remove(i);
+						e_Bullet_Speed.remove(i);
+						continue;
+					}
+					
+					if(Collider.EnterCollider(new Vector2(player.postion), new Vector2(e_Bullet.get(i).postion), 10))
+					{
+						e_Bullet.remove(i);
+						e_Bullet_Speed.remove(i);
+						hp--;
+						continue;
+					}
+					
+					
+					
+					e_Bullet.get(i).DrawObject(g);
+					System.out.println(Collider.EnterCollider(new Vector2(player.postion), new Vector2(e_Bullet.get(i).postion), 10));
+					i++;
+				}
+				
+				
+				if(b_hp <= 0) SceneManager.nextScene = SceneManager.Scene.Clear;
+				if(hp <= 0) SceneManager.nextScene = SceneManager.Scene.GameOver;
 				
 				break;
 			case Clear:
@@ -246,9 +338,16 @@ class DrawCanvas extends JPanel{
 				score = 0;
 				hp = MaxHP;
 				mp = MaxMP;
+				b_hp = BossMaxHP;
 				map = new Mapchip();
 				player.postion = new Vector2(200,400);
-				System.out.println(player.size.ToString());
+				boss.postion = new Vector2(200,100);
+				p_Bullet.clear();
+				e_Bullet.clear();
+				e_Bullet_Speed.clear();
+				e_Bullet_Timer = 0;
+				modeTimer = 0;
+				invincibleMode = true;
 				break;
 			case Clear:
 				btn.text = "タイトル";
