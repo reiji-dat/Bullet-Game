@@ -12,30 +12,6 @@ public class GameObject extends JPanel{
 	Vector2 size;
 	Image image;
 	boolean show = true;
-	
-	/*
-	GameObject(Image img, float x, float y)
-	{
-		postion = new Vector2(x,y);
-		this.image = img;
-		//ImageIcon icon = new ImageIcon;
-		size = new Vector2(image.getWidth(this), image.getHeight(this));
-	}
-	
-	GameObject(Image img, int x, int y)
-	{
-		postion = new Vector2(x,y);
-		this.image = img;
-		size = new Vector2(image.getWidth(this), image.getHeight(this));
-	}
-	
-	GameObject(Image img, Vector2 v)
-	{
-		postion = v;
-		this.image = img;
-		size = new Vector2(image.getWidth(this), image.getHeight(this));
-	}
-	*/
 	GameObject(String img, float x, float y)
 	{
 		postion = new Vector2(x,y);

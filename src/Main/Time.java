@@ -1,8 +1,6 @@
 package Main;
 
 public class Time{
-
-	//long startTime;
 	public static Time Instance = new Time(); 
 	
 	long pastTime;
@@ -10,7 +8,6 @@ public class Time{
 	public static long flameTime;
 	Time()
 	{
-		//startTime = System.currentTimeMillis();
 		currentTime = System.currentTimeMillis();
 	}
 	public static void TimeCount() 

@@ -4,6 +4,11 @@ package Main;
 public class Vector2 {
 	
 	public float x,y;
+	public static Vector2 Top = new Vector2(0,-1);
+	public static Vector2 Bottom = new Vector2(0,1);
+	public static Vector2 Right = new Vector2(1,0);
+	public static Vector2 Left = new Vector2(-1,0);
+	public static Vector2 Zero = new Vector2(0,0);
 	
 	Vector2(float x,float y)
 	{
@@ -72,15 +77,36 @@ public class Vector2 {
 	//距離を求める(パブスタにする)
 	public static float distance(Vector2 v1,Vector2 v2)
 	{
-		v1.minus(v2);
-		v1.x *= v1.x;
-		v1.y *= v1.y;
-		return (float)Math.sqrt(v1.x + v1.y);
+		v2.minus(v1);
+		v2.x *= v2.x;
+		v2.y *= v2.y;
+		return (float)Math.sqrt(v2.x + v2.y);
 	}
 	
+	
+	public static float Angle(Vector2 v)
+	{
+		float r = (float) Math.atan2( v.y - Zero.y ,v.x - Zero.x);
+		if (r < 0) {
+	        r = (float) (r + 2 * Math.PI);
+	    }
+	    return (float) (r * 360 / (2 * Math.PI));
+	}
+	
+	public static float Angle(Vector2 v1, Vector2 v2)
+	{
+		float r = (float) Math.atan2( v2.y - v1.y ,v2.x - v1.x);
+		if (r < 0) {
+	        r = (float) (r + 2 * Math.PI);
+	    }
+	    return (float) (r * 360 / (2 * Math.PI));
+	}
+	
+	
+	//上が0度
 	public static Vector2 DegreeToVector(float degree)
 	{
-		float rad = (float)Math.toRadians(degree - 180);
+		float rad = (float)Math.toRadians(degree);
 		return new Vector2((float)Math.cos(rad), (float)Math.sin(rad));
 	}
 	

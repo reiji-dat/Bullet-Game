@@ -63,32 +63,44 @@ class GameWindow extends JFrame implements Runnable{
 
 class DrawCanvas extends JPanel{
 	Mapchip map;
-	GameObject player = new GameObject("PlayerFly001.png",0,0);
-	ArrayList<GameObject> p_Bullet = new ArrayList<>();
+	Player player = new Player("PlayerFly001.png",0,0);
 	
-	ArrayList<GameObject> e_Bullet = new ArrayList<>();
-	ArrayList<Vector2> e_Bullet_Speed = new ArrayList<>();
+	
+	ArrayList<Bullet> e_Bullet = new ArrayList<>();
 	final int e_Bullet_Cool = 50;
-	int e_Bullet_Timer = 0;
+	int e_Bullet_Timer;//敵のランダム撃ちタイマー
+	int putternTime;
+	int e_pBullet_Timer;
 	
 	
 	GameObject boss = new GameObject("dragon1.png",0,0,1.5f,1.5f);
 	
-	float playerSpeed = 3;
-	final float P_BulletSpeed = 4;
 	Button btn = new Button("mapchip.png","スタート",200,200,400,100);
-	int mainTimer;
-	int bulletTimer;
+	int mainTimer;//UIのタイマー
+	
 	int score;
-	final int MaxHP = 5;
-	int hp;
-	final int MaxMP = 30;
-	int mp;
+	
 	
 	final int BossMaxHP = 500;
-	int b_hp;
-	int modeTimer = 0;
+	public static int b_hp;
+	int modeTimer;//ボスの状態タイマー
 	boolean invincibleMode = true;
+	int atkChangeTimer;
+	float volDeg;
+	float volDeg2;
+	
+	enum AttackPattern
+	{
+		Closs,//縦横
+		Pick,//狙い撃ち
+		Voluted,//渦巻
+		Voluted2,//渦巻&逆渦巻
+		SinWave,//sin派
+		FireFlower,//花火
+		Tracking//追尾
+	}
+	
+	AttackPattern pattern;
 
 	public void paintComponent(Graphics g) 
 	{
@@ -119,7 +131,6 @@ class DrawCanvas extends JPanel{
 				Text.drawString(g,"©2021 - Ho'pe",400, 500, Text.AdjustWidth.Center,Text.AdjustHeight.Bottom);
 				break;
 			case Game:
-				System.out.println(Debug.FrameRate());
 				map.DrawMapchip(g);
 				//デバッグ
 				if(KeyInput.inputKey[KeyEvent.VK_P]) SceneManager.nextScene = SceneManager.Scene.Clear;
@@ -140,8 +151,8 @@ class DrawCanvas extends JPanel{
 				Text.drawString(g, "Player", 433,90);
 				font = new Font("ＭＳ Ｐゴシック",Font.PLAIN,32);
 				g.setFont(font);
-				Text.drawString(g, "HP " + String.format("%2d", hp) + "/" + String.format("%2d", MaxHP), 433,140);
-				Text.drawString(g, "MP " + String.format("%2d", mp) + "/" + String.format("%2d", MaxMP), 433,170);
+				Text.drawString(g, "HP " + String.format("%2d", player.hp) + "/" + String.format("%2d", player.MaxHP), 433,140);
+				Text.drawString(g, "MP " + String.format("%2d", player.mp) + "/" + String.format("%2d", player.MaxMP), 433,170);
 				font = new Font("ＭＳ Ｐゴシック",Font.BOLD,48);
 				g.setFont(font);
 				Text.drawString(g, "Dragon", 433,210);
@@ -149,66 +160,7 @@ class DrawCanvas extends JPanel{
 				g.setFont(font);
 				Text.drawString(g, "HP " + String.format("%2d", b_hp) + "/" + String.format("%2d", BossMaxHP), 433,256);
 				
-				
-				/*
-				 * プレイヤー
-				 */
-				//移動
-				if(KeyInput.inputKey[KeyEvent.VK_W]) player.postion.y -= playerSpeed;
-				if(KeyInput.inputKey[KeyEvent.VK_A]) player.postion.x -= playerSpeed;
-				if(KeyInput.inputKey[KeyEvent.VK_S]) player.postion.y += playerSpeed;
-				if(KeyInput.inputKey[KeyEvent.VK_D]) player.postion.x += playerSpeed;
-				
-				//移動制限
-				player.postion.x = player.postion.x < 0 ? 0 : player.postion.x;
-				player.postion.x = player.postion.x > 400 ? 400 : player.postion.x;
-				player.postion.y = player.postion.y < 0 ? 0 : player.postion.y;
-				player.postion.y = player.postion.y > 500 ? 500 : player.postion.y;
-				player.DrawObject(g);
-				
-				//弾
-				if(bulletTimer < 500)
-				{
-					bulletTimer += Time.flameTime;
-				}
-				else if(mp < MaxMP)
-				{
-					bulletTimer -= 500;
-					mp++;
-				}
-				
-				if(KeyInput.pressedKey[KeyEvent.VK_SPACE] && mp > 0) 
-					{
-						mp--;
-						p_Bullet.add(new GameObject("player_bullet.png",player.postion.x,player.postion.y-10));
-						p_Bullet.add(new GameObject("player_bullet.png",player.postion.x+20,player.postion.y+5));
-						p_Bullet.add(new GameObject("player_bullet.png",player.postion.x-20,player.postion.y+5));
-						System.out.println("撃った");
-					}
-				for(int i = 0; i < p_Bullet.size();)
-				{
-					p_Bullet.get(i).postion.y-=P_BulletSpeed;
-					if(p_Bullet.get(i).postion.y < 0 
-					|| p_Bullet.get(i).postion.x < 0 
-					|| p_Bullet.get(i).postion.x > 400) 
-					{
-						p_Bullet.remove(i);
-						continue;
-					}
-					if(p_Bullet.get(i).postion.x >= boss.postion.x - boss.size.x / 2
-					&& p_Bullet.get(i).postion.x <= boss.postion.x + boss.size.x / 2
-					&& p_Bullet.get(i).postion.y >= boss.postion.y - boss.size.y / 2
-					&& p_Bullet.get(i).postion.y <= boss.postion.y + boss.size.y / 2
-					&& !invincibleMode)
-					{
-						b_hp--;
-						p_Bullet.remove(i);
-						continue;
-					}
-					p_Bullet.get(i).DrawObject(g);
-					i++;//物を消すと移動処理されないので、消したときは足さずに次のループへ
-				}
-				
+				player.MoveDraw(g, boss, invincibleMode);
 				/*
 				 * 敵
 				 */
@@ -217,13 +169,6 @@ class DrawCanvas extends JPanel{
 				 * TODO 敵の挙動
 				 * 動く(上半分限る)5±2秒で動く
 				 * -----------
-				 * [方向さえ決まれば一生まっすぐ]
-				 * ランダム拡散撃ち
-				 * 縦連撃ち&&横連撃ち
-				 * プレイヤーに向かって打つ(何方向か余計なのも)
-				 * 渦巻撃ち
-				 * 渦巻撃ち&&逆渦巻
-				 * 
 				 * 数列sin波
 				 * 花火(撃って数秒後拡散)
 				 * 追尾撃ち(一定距離まで近づいたらまっすぐになる。)
@@ -231,7 +176,7 @@ class DrawCanvas extends JPanel{
 				 * TODO 倒し方
 				 * 30秒耐久(この間無敵)
 				 * 10秒間攻撃できる。(弾幕の数を減らす)
-				 * 大体5回繰り返す
+				 * 大体3回繰り返す
 				 * クリア
 				 */
 				modeTimer += Time.flameTime;
@@ -246,9 +191,98 @@ class DrawCanvas extends JPanel{
 					if(e_Bullet_Timer >= e_Bullet_Cool)
 					{
 						e_Bullet_Timer -= e_Bullet_Cool;
-						e_Bullet.add(new GameObject("enemy_bullet.png",boss.postion.x,boss.postion.y-10));
-						e_Bullet_Speed.add(new Vector2(Vector2.DegreeToVector((float) ((Math.random() * (360))))));
-						e_Bullet_Speed.get(e_Bullet_Speed.size()-1).times(2);
+						//TODO 画像情報を毎回取得しているため1度だけで良い
+						e_Bullet.add(new Bullet("enemy_bullet.png",boss.postion.x,boss.postion.y-10));
+						e_Bullet.get(e_Bullet.size()-1).speed 
+						= new Vector2(Vector2.DegreeToVector((float) ((Math.random() * (360)))));
+						e_Bullet.get(e_Bullet.size()-1).speed.times(2);
+					}
+					//パターン攻撃
+					e_pBullet_Timer += Time.flameTime;
+					if(e_pBullet_Timer >= putternTime)
+					{
+						e_pBullet_Timer -= putternTime;
+						switch(pattern)
+						{
+							case Closs:
+								for(int i = 100; i < 400;i+=100)
+								{
+									e_Bullet.add(new Bullet("enemy_bullet.png",i,0));
+									e_Bullet.get(e_Bullet.size()-1).speed = new Vector2(0,3);
+								}
+								for(int i = 100; i < 500;i+=100)
+								{
+									e_Bullet.add(new Bullet("enemy_bullet.png",0,i));
+									e_Bullet.get(e_Bullet.size()-1).speed = new Vector2(3,0);
+								}
+								break;
+							case Pick:
+								Vector2 a = new Vector2(player.postion);
+								float deg = Vector2.Angle(new Vector2(boss.postion.x,boss.postion.y-10),new Vector2(a));
+								for(int i = -40;i <= 40;i+=20)
+								{
+									e_Bullet.add(new Bullet("enemy_bullet.png",boss.postion.x,boss.postion.y-10));
+									e_Bullet.get(e_Bullet.size()-1).speed = new Vector2(Vector2.DegreeToVector(deg + i));
+									e_Bullet.get(e_Bullet.size()-1).speed.times(3);
+								}
+								break;
+							case Voluted:
+								for(int i = -144;i <= 144;i+=72)
+								{
+									e_Bullet.add(new Bullet("enemy_bullet.png",boss.postion.x,boss.postion.y-10));
+									e_Bullet.get(e_Bullet.size()-1).speed = new Vector2(Vector2.DegreeToVector(volDeg + i));
+									e_Bullet.get(e_Bullet.size()-1).speed.times(3);
+								}
+								volDeg+=10;
+								break;
+							case Voluted2:
+								for(int i = -144;i <= 144;i+=72)
+								{
+									e_Bullet.add(new Bullet("enemy_bullet.png",boss.postion.x,boss.postion.y-10));
+									e_Bullet.get(e_Bullet.size()-1).speed = new Vector2(Vector2.DegreeToVector(volDeg + i));
+									e_Bullet.get(e_Bullet.size()-1).speed.times(3);
+									e_Bullet.add(new Bullet("enemy_bullet.png",boss.postion.x,boss.postion.y-10));
+									e_Bullet.get(e_Bullet.size()-1).speed = new Vector2(Vector2.DegreeToVector(volDeg2 + i));
+									e_Bullet.get(e_Bullet.size()-1).speed.times(3);
+								}
+								volDeg+=10;
+								volDeg2-=10;
+								break;
+							default:
+								break;
+						}
+					}
+					atkChangeTimer += Time.flameTime;
+					if(atkChangeTimer >= 5000)
+					{
+						//TODO 攻撃パターン抽選
+						int next = (int)(Math.random() * 4);
+						switch(next)
+						{
+							case 0:
+								pattern = AttackPattern.Closs;
+								putternTime = 500;
+								break;
+							case 1:
+								pattern = AttackPattern.Pick;
+								putternTime = 333;
+								break;
+							case 2:
+								pattern = AttackPattern.Voluted;
+								putternTime = 150;
+								volDeg = 0;
+								break;
+							case 3:
+								pattern = AttackPattern.Voluted2;
+								putternTime = 150;
+								volDeg = 0;
+								volDeg2 = 180;
+								break;
+							default:
+								break;
+						}
+						atkChangeTimer -= 5000;
+						e_pBullet_Timer = 0;
 					}
 				}
 				else
@@ -257,41 +291,34 @@ class DrawCanvas extends JPanel{
 					{
 						invincibleMode = !invincibleMode;
 						modeTimer -= 10000;
+						atkChangeTimer = 0;
 					}
 				}
 				
 				for(int i = 0; i < e_Bullet.size();)
 				{
-					
-					e_Bullet.get(i).movePostion(e_Bullet_Speed.get(i));
+					e_Bullet.get(i).movePostion(e_Bullet.get(i).speed);
 					if(e_Bullet.get(i).postion.y < 0 
 					|| e_Bullet.get(i).postion.y > 500
 					|| e_Bullet.get(i).postion.x < 0 
 					|| e_Bullet.get(i).postion.x > 400) 
 					{
 						e_Bullet.remove(i);
-						e_Bullet_Speed.remove(i);
 						continue;
 					}
-					
-					if(Collider.EnterCollider(new Vector2(player.postion), new Vector2(e_Bullet.get(i).postion), 10))
+					if(Collider.EnterCollider(player.postion, new Vector2(e_Bullet.get(i).postion), 10))
 					{
 						e_Bullet.remove(i);
-						e_Bullet_Speed.remove(i);
-						hp--;
+						player.hp--;
 						continue;
 					}
-					
-					
-					
 					e_Bullet.get(i).DrawObject(g);
-					System.out.println(Collider.EnterCollider(new Vector2(player.postion), new Vector2(e_Bullet.get(i).postion), 10));
 					i++;
 				}
 				
 				
 				if(b_hp <= 0) SceneManager.nextScene = SceneManager.Scene.Clear;
-				if(hp <= 0) SceneManager.nextScene = SceneManager.Scene.GameOver;
+				if(player.hp <= 0) SceneManager.nextScene = SceneManager.Scene.GameOver;
 				
 				break;
 			case Clear:
@@ -333,21 +360,20 @@ class DrawCanvas extends JPanel{
 				btn.text = "スタート";
 				break;
 			case Game:
+				player.Init();
 				mainTimer = 0;
-				bulletTimer = 0;
 				score = 0;
-				hp = MaxHP;
-				mp = MaxMP;
 				b_hp = BossMaxHP;
 				map = new Mapchip();
-				player.postion = new Vector2(200,400);
 				boss.postion = new Vector2(200,100);
-				p_Bullet.clear();
 				e_Bullet.clear();
-				e_Bullet_Speed.clear();
 				e_Bullet_Timer = 0;
+				atkChangeTimer = 0;
 				modeTimer = 0;
+				e_pBullet_Timer = 0;;
 				invincibleMode = true;
+				pattern = AttackPattern.Closs;
+				putternTime = 500;
 				break;
 			case Clear:
 				btn.text = "タイトル";
