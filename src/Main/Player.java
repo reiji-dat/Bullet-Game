@@ -5,7 +5,6 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class Player extends GameObject{
-
 	ArrayList<GameObject> p_Bullet = new ArrayList<>();
 	float playerSpeed = 3;
 	final float P_BulletSpeed = 4;
@@ -16,16 +15,31 @@ public class Player extends GameObject{
 	
 	int bulletTimer;//MP回復用タイマー
 	
-	Player(String img, float x, float y) {
-		super(img, x, y);
-		// TODO 自動生成されたコンストラクター・スタブ
+	boolean invincible = false;
+	final int InvTime = 1000;
+	int invTimer;
+	
+	Player(String img, Vector2 pos) 
+	{
+		super(img, pos);
 	}
 	
 	//敵が複数いる場合はメインにゲッターを用意して情報を取得
 	//今回は1体だけなので引数にしている
 	//TODO ボスクラスを作ったら第3,4引数はいらない
-	void MoveDraw(Graphics g,GameObject boss,boolean invincible)
+	void MoveDraw(Graphics g,GameObject boss)
 	{
+		if(invincible)
+		{
+			invTimer += Time.flameTime;
+			show = Math.sin(invTimer/20) <= 0 ? true : false;
+			if(invTimer>=InvTime)
+			{
+				show = true;
+				invincible = false;
+				invTimer = 0;
+			}
+		}
 		//移動
 		if(KeyInput.inputKey[KeyEvent.VK_W]) postion.y -= playerSpeed;
 		if(KeyInput.inputKey[KeyEvent.VK_A]) postion.x -= playerSpeed;
@@ -40,10 +54,7 @@ public class Player extends GameObject{
 		DrawObject(g);
 		
 		//弾
-		if(bulletTimer < 500)
-		{
-			bulletTimer += Time.flameTime;
-		}
+		if(bulletTimer < 500) bulletTimer += Time.flameTime;
 		else if(mp < MaxMP)
 		{
 			bulletTimer -= 500;
@@ -51,30 +62,17 @@ public class Player extends GameObject{
 		}
 		
 		if(KeyInput.pressedKey[KeyEvent.VK_SPACE] && mp > 0) 
-			{
-				mp--;
-				p_Bullet.add(new GameObject("player_bullet.png",postion.x,postion.y-10));
-				p_Bullet.add(new GameObject("player_bullet.png",postion.x+20,postion.y+5));
-				p_Bullet.add(new GameObject("player_bullet.png",postion.x-20,postion.y+5));
-				System.out.println("撃った");
-			}
+		{
+			mp--;
+			p_Bullet.add(new GameObject("player_bullet.png",new Vector2(postion.x,postion.y-10)));
+			p_Bullet.add(new GameObject("player_bullet.png",new Vector2(postion.x+20,postion.y+5)));
+			p_Bullet.add(new GameObject("player_bullet.png",new Vector2(postion.x-20,postion.y+5)));
+		}
 		for(int i = 0; i < p_Bullet.size();)
 		{
 			p_Bullet.get(i).postion.y-=P_BulletSpeed;
-			if(p_Bullet.get(i).postion.y < 0 
-			|| p_Bullet.get(i).postion.x < 0 
-			|| p_Bullet.get(i).postion.x > 400) 
+			if(p_Bullet.get(i).postion.y < 0 || p_Bullet.get(i).postion.x < 0 || p_Bullet.get(i).postion.x > 400) 
 			{
-				p_Bullet.remove(i);
-				continue;
-			}
-			if(p_Bullet.get(i).postion.x >= boss.postion.x - boss.size.x / 2
-			&& p_Bullet.get(i).postion.x <= boss.postion.x + boss.size.x / 2
-			&& p_Bullet.get(i).postion.y >= boss.postion.y - boss.size.y / 2
-			&& p_Bullet.get(i).postion.y <= boss.postion.y + boss.size.y / 2
-			&& !invincible)
-			{
-				DrawCanvas.b_hp--;//TODO セッターをメインに作る
 				p_Bullet.remove(i);
 				continue;
 			}
@@ -90,6 +88,7 @@ public class Player extends GameObject{
 		mp = MaxMP;
 		p_Bullet.clear();
 		postion = new Vector2(200,400);
+		invincible = false;
+		invTimer = 0;
 	}
-
 }

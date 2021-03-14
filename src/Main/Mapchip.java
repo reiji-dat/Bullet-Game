@@ -62,8 +62,8 @@ public class Mapchip extends JPanel{
 		{
 			for(int x = 0; x < map[y].length; x++)
 			{
-				g.drawImage(mapImages, x*chipSize.x, y*chipSize.y,
-						x*chipSize.x + chipSize.x, y*chipSize.y + chipSize.x,
+				g.drawImage(mapImages, (int)(x * chipSize.x * Main.MagniWidth), (int)(y * chipSize.y * Main.MagniHeight),
+						(int)((x * chipSize.x + chipSize.x) * Main.MagniWidth), (int)((y * chipSize.y + chipSize.x) * Main.MagniHeight),
 						chipPoint[map[y][x]].x,chipPoint[map[y][x]].y,
 						chipPoint[map[y][x]].x+chipSize.x,chipPoint[map[y][x]].y+chipSize.y,this);
 			}

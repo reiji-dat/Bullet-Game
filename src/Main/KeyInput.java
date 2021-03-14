@@ -13,6 +13,7 @@ class KeyInput implements KeyListener
 	//押した瞬間のキーを取得
 	public void keyPressed(KeyEvent e)
     {
+		if(e.getKeyCode() >= 256) return;
 		inputKey[e.getKeyCode()] = true;
 		if(!onceKey[e.getKeyCode()])
 		{
@@ -24,6 +25,7 @@ class KeyInput implements KeyListener
 	//離した瞬間のキーを取得
 	public void keyReleased(KeyEvent e)
 	{
+		if(e.getKeyCode() >= 256) return;
 		inputKey[e.getKeyCode()] = false;
 		pressedKey[e.getKeyCode()] = false;
 		onceKey[e.getKeyCode()] = false;
@@ -32,6 +34,7 @@ class KeyInput implements KeyListener
 	//押し続けている間キーを取得
 	public void keyTyped(KeyEvent e)
 	{
+		if(e.getKeyCode() >= 256) return;
 		inputKey[e.getKeyCode()] = true;
 	}
 	

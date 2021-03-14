@@ -1,4 +1,5 @@
 package Main;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
@@ -20,6 +21,13 @@ public class Text {
 	
 	public static void drawString(Graphics g,String text,int x,int y,AdjustWidth wid, AdjustHeight hei)
 	{
+		x = (int)(x * Main.MagniWidth);
+		y = (int)(y * Main.MagniHeight);
+		Font o_font = g.getFont();
+		Font font = g.getFont();
+		font = new Font(font.getName(),font.getStyle(),(int)(font.getSize() * Main.MagniWidth));
+		
+		g.setFont(font);
 		FontMetrics fm = g.getFontMetrics();
 		Rectangle rect = fm.getStringBounds(text, g).getBounds();
 		switch(wid)
@@ -46,10 +54,18 @@ public class Text {
 				break;
 		}
 		g.drawString(text, x, y);
+		g.setFont(o_font);
 	}
 	
 	public static void drawString(Graphics g,String text,int x,int y,AdjustWidth wid)
 	{
+		x = (int)(x * Main.MagniWidth);
+		y = (int)(y * Main.MagniHeight);
+		Font o_font = g.getFont();
+		Font font = g.getFont();
+		font = new Font(font.getName(),font.getStyle(),(int)(font.getSize() * Main.MagniWidth));
+		
+		g.setFont(font);
 		FontMetrics fm = g.getFontMetrics();
 		Rectangle rect = fm.getStringBounds(text, g).getBounds();
 		switch(wid)
@@ -65,10 +81,17 @@ public class Text {
 		}
 		y += fm.getMaxAscent();
 		g.drawString(text, x, y);
+		g.setFont(o_font);
 	}
 	
 	public static void drawString(Graphics g,String text,int x,int y,AdjustHeight hei)
 	{
+		x = (int)(x * Main.MagniWidth);
+		y = (int)(y * Main.MagniHeight);
+		Font o_font = g.getFont();
+		Font font = g.getFont();
+		font = new Font(font.getName(),font.getStyle(),(int)(font.getSize() * Main.MagniWidth));
+		g.setFont(font);
 		FontMetrics fm = g.getFontMetrics();
 		Rectangle rect = fm.getStringBounds(text, g).getBounds();
 		switch(hei)
@@ -83,13 +106,21 @@ public class Text {
 				y -= fm.getMaxAscent()/ 2;
 				break;
 		}
-		
+		g.drawString(text, x, y);
+		g.setFont(o_font);
 	}
 	
 	public static void drawString(Graphics g,String text,int x,int y)
 	{
+		x = (int)(x * Main.MagniWidth);
+		y = (int)(y * Main.MagniHeight);
+		Font o_font = g.getFont();
+		Font font = g.getFont();
+		font = new Font(font.getName(),font.getStyle(),(int)(font.getSize() * Main.MagniWidth));
+		g.setFont(font);
 		FontMetrics fm = g.getFontMetrics();
 		y += fm.getMaxAscent();
 		g.drawString(text, x, y);
+		g.setFont(o_font);
 	}
 }

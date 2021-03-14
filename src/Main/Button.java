@@ -36,14 +36,16 @@ public class Button extends JPanel{
 		}
 		if(show)
 		{
-			g.drawImage(image, (int)postion.x, (int)postion.y, (int)size.x, (int)size.y, this);
+			g.drawImage(image, (int)(postion.x * Main.MagniWidth), (int)(postion.y * Main.MagniHeight), (int)(size.x * Main.MagniWidth), (int)(size.y * Main.MagniHeight), this);
 			Text.drawString(g, text, (int)(postion.x + size.x / 2), (int)(postion.y + size.y / 2), Text.AdjustWidth.Center, Text.AdjustHeight.Center);
 			if(MouseInput.pressed)
 			{
 				Vector2 pos = MouseInput.pressedPostion;
-				
-				if(postion.x <= pos.x && postion.x + size.x >= pos.x
-				&& postion.y <= pos.y && postion.y + size.y >= pos.y)
+				//pos.times(new Vector2(Main.MagniWidth,Main.MagniHeight));
+				Vector2 bpos = new Vector2(postion);
+				bpos.times(new Vector2(Main.MagniWidth,Main.MagniHeight));
+				if(bpos.x <= pos.x && bpos.x + size.x >= pos.x
+				&& bpos.y <= pos.y && bpos.y + size.y >= pos.y)
 				pressed = true;
 			}
 		}
