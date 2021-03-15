@@ -23,14 +23,12 @@ public class FireFlower extends Bullet{
 		
 		if(currentDist <= DiffDistance)
 		{
-			System.out.println(currentDist);
 			currentDist+=velocity;
 			movePostion(speed);
 			DrawObject(g);
 		}
 		else
 		{
-			System.out.println("拡散");
 			for(int i = 0;i < 360;i+=36)
 			{
 				Vector2 vec = new Vector2(Vector2.DegreeToVector(i));

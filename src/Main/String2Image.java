@@ -18,4 +18,5 @@ public class String2Image extends JPanel{
 			return  null;
 		}
 	}
+	
 }

@@ -52,16 +52,16 @@ public class Vector2 {
 		y *= a;
 	}
 	
-	void times(int a)
-	{      
-		x *= a;
-		y *= a;
-	}
-	
 	void division(Vector2 v2)
 	{
 		x /= v2.x;
 		y /= v2.y;
+	}
+	
+	void division(float a)
+	{
+		x /= a;
+		y /= a;
 	}
 	
 	void normalize()

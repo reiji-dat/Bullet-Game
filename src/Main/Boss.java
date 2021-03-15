@@ -22,6 +22,11 @@ public class Boss extends GameObject
 	float volDeg;
 	float volDeg2;
 	
+	int moveTimer;
+	int moveTime = 4000;
+	boolean move = false;
+	Vector2 speed = new Vector2(Vector2.Zero);
+	
 	enum AttackPattern
 	{
 		Closs,//縦横
@@ -39,6 +44,33 @@ public class Boss extends GameObject
 	}
 	void MoveDraw(Graphics g,Player player)
 	{
+		//TODO 画面は時に来たらタイマーを強制的に超えさせる。
+		moveTimer+=Time.flameTime;
+		if(moveTimer >= moveTime)
+		{
+			System.out.println(moveTimer+ "," +  moveTime);
+			moveTimer = 0;
+			if(move)
+			{
+				moveTime = 4000;
+				speed = new Vector2(Vector2.Zero);
+			}
+			else
+			{
+				
+				moveTime = (int)(Math.random()*2000)+3000;
+				speed = new Vector2(Vector2.DegreeToVector((float)Math.random()*360));
+				speed.division(4);
+			}
+			move = !move;
+		}
+		if(postion.x < 50 || postion.x > 350 || postion.y < 50 || postion.y > 200)
+		{
+			moveTimer = 6000;
+			postion.times(-1);
+			movePostion(speed);
+		}
+		movePostion(speed);
 		DrawObject(g);
 		for(int i = 0; i < player.p_Bullet.size();)
 		{
@@ -285,6 +317,8 @@ public class Boss extends GameObject
 		invincible = true;
 		pattern = AttackPattern.Closs;
 		putternTime = 500;
+		moveTimer = 0;
+		moveTime = 4000;
 	}
 	
 	void Add(Bullet bullet)

@@ -15,7 +15,7 @@ public class Main{
 	public static final float MagniWidth = (float)Width / (float)DefaultWidth;
 	public static final float MagniHeight = (float)Height / (float)DefaultHeight;
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception{
 		System.out.println(Width);
 		System.out.println(DefaultWidth);
 		System.out.println((float)Width / (float)DefaultWidth);
@@ -24,6 +24,8 @@ public class Main{
 		gw.add(new DrawCanvas());
 		gw.setVisible(true);
 		gw.StartGameLoop();
+		AudioManager test = new AudioManager("title.wav");
+		test.Play();
 	}
 }
 
@@ -40,6 +42,7 @@ class GameWindow extends JFrame implements Runnable{
 		setResizable(false);
 		addKeyListener(new KeyInput());
 		addMouseListener(new MouseInput());
+		
 		
 	}
 	
@@ -171,6 +174,7 @@ class DrawCanvas extends JPanel{
 		switch(SceneManager.currentScene)
 		{
 			case Title:
+				
 				btn.text = "スタート";
 				break;
 			case Game:
