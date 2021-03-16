@@ -24,8 +24,7 @@ public class Main{
 		gw.add(new DrawCanvas());
 		gw.setVisible(true);
 		gw.StartGameLoop();
-		AudioManager test = new AudioManager("title.wav");
-		test.Play();
+		
 	}
 }
 
@@ -76,6 +75,7 @@ class GameWindow extends JFrame implements Runnable{
 }
 
 class DrawCanvas extends JPanel{
+	AudioManager[] bgm = new AudioManager[] {new AudioManager("title.wav",0.5f),new AudioManager("buttle.wav",0.5f)};
 	Mapchip map;
 	Player player = new Player("PlayerFly001.png",Vector2.Zero);
 	Boss boss = new Boss("dragon1.png",Vector2.Zero,new Vector2(1.5f,1.5f));
@@ -106,7 +106,11 @@ class DrawCanvas extends JPanel{
 				font = new Font(null,Font.PLAIN,32);
 				g.setFont(font);
 				btn.DrawButton(g);
-				if(btn.pressed) SceneManager.nextScene = SceneManager.Scene.Game;
+				if(btn.pressed)
+				{
+					SEManager.PlaySE(SEManager.SE.Select);
+					SceneManager.nextScene = SceneManager.Scene.Game;
+				}
 				
 				font = new Font(null,Font.PLAIN,16);
 				g.setFont(font);
@@ -146,7 +150,11 @@ class DrawCanvas extends JPanel{
 				font = new Font(null,Font.PLAIN,32);
 				g.setFont(font);
 				btn.DrawButton(g);
-				if(btn.pressed) SceneManager.nextScene = SceneManager.Scene.Title;
+				if(btn.pressed)
+				{
+					SEManager.PlaySE(SEManager.SE.Select);
+					SceneManager.nextScene = SceneManager.Scene.Title;
+				}
 				break;
 			case GameOver:
 				font = new Font("ＭＳ Ｐゴシック",Font.BOLD,64);
@@ -156,7 +164,11 @@ class DrawCanvas extends JPanel{
 				font = new Font(null,Font.PLAIN,32);
 				g.setFont(font);
 				btn.DrawButton(g);
-				if(btn.pressed) SceneManager.nextScene = SceneManager.Scene.Title;
+				if(btn.pressed) 
+				{
+					SEManager.PlaySE(SEManager.SE.Select);
+					SceneManager.nextScene = SceneManager.Scene.Title;
+				}
 				break;
 			default:
 				break;
@@ -174,10 +186,14 @@ class DrawCanvas extends JPanel{
 		switch(SceneManager.currentScene)
 		{
 			case Title:
-				
+				bgm[0].Reset();
+				bgm[0].Play();
 				btn.text = "スタート";
 				break;
 			case Game:
+				bgm[0].Stop();
+				bgm[1].Reset();
+				bgm[1].Play();
 				player.Init();
 				boss.Init();
 				mainTimer = 0;
@@ -185,9 +201,11 @@ class DrawCanvas extends JPanel{
 				map = new Mapchip();
 				break;
 			case Clear:
+				bgm[1].Stop();
 				btn.text = "タイトル";
 				break;
 			case GameOver:
+				bgm[1].Stop();
 				btn.text = "タイトル";
 				break;
 			default:

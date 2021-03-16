@@ -27,7 +27,8 @@ public class AudioManager {
 	{
 		URL url = getClass().getResource(name);
 		clip = createClip(url);
-		setVolume(volume);
+		System.out.println(vol);
+		setVolume(vol);
 	}
 	
 	//TODO 後で解析
@@ -83,7 +84,7 @@ public class AudioManager {
 		clip.stop();
 	}
 	
-	void rePlay()
+	void Reset()
 	{
 		clip.stop();
 		clip.flush();
@@ -92,6 +93,7 @@ public class AudioManager {
 	
 	void setVolume(float vol)
 	{
+		
 		volume = vol;//この変数は基本いらないが現在の音量を画面上に表示するときに役に立つ？
 		FloatControl ctrl = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
 		ctrl.setValue((float)Math.log10((float)volume)*20);

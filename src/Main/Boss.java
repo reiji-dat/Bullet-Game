@@ -80,6 +80,7 @@ public class Boss extends GameObject
 			&& player.p_Bullet.get(i).postion.y <= postion.y + size.y / 2
 			&& !invincible)
 			{
+				
 				hp--;//TODO セッターをメインに作る
 				player.p_Bullet.remove(i);
 				continue;
@@ -237,6 +238,7 @@ public class Boss extends GameObject
 			}
 			if(!player.invincible && Collider.EnterCollider(player.postion, new Vector2(e_Bullet.get(i).postion), 7))
 			{
+				SEManager.PlaySE(SEManager.SE.Damage);
 				player.invincible = true;
 				e_Bullet.remove(i);
 				player.hp--;
@@ -260,6 +262,7 @@ public class Boss extends GameObject
 			}
 			if(!player.invincible && Collider.EnterCollider(player.postion, new Vector2(fireFlower.get(i).postion), 7))
 			{
+				SEManager.PlaySE(SEManager.SE.Damage);
 				player.invincible = true;
 				fireFlower.remove(i);
 				player.hp--;
@@ -288,6 +291,7 @@ public class Boss extends GameObject
 			}
 			if(!player.invincible && Collider.EnterCollider(player.postion, new Vector2(tracking.get(i).postion), 7))
 			{
+				SEManager.PlaySE(SEManager.SE.Damage);
 				player.invincible = true;
 				tracking.remove(i);
 				player.hp--;

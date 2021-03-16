@@ -11,7 +11,7 @@ public class SceneManager {
 		GameOver
 	}
 	
-	public static Scene currentScene = Scene.Title;
+	public static Scene currentScene = Scene.None;
 	//シーンを変えるときこれを変える。
-	public static Scene nextScene = Scene.None;
+	public static Scene nextScene = Scene.Title;
 }

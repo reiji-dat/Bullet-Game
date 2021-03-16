@@ -57,12 +57,14 @@ public class Player extends GameObject{
 		if(bulletTimer < 500) bulletTimer += Time.flameTime;
 		else if(mp < MaxMP)
 		{
+			
 			bulletTimer -= 500;
 			mp++;
 		}
 		
 		if(KeyInput.pressedKey[KeyEvent.VK_SPACE] && mp > 0) 
 		{
+			SEManager.PlaySE(SEManager.SE.Attack);
 			mp--;
 			p_Bullet.add(new GameObject("player_bullet.png",new Vector2(postion.x,postion.y-10)));
 			p_Bullet.add(new GameObject("player_bullet.png",new Vector2(postion.x+20,postion.y+5)));
