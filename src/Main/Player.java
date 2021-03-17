@@ -66,9 +66,9 @@ public class Player extends GameObject{
 		{
 			SEManager.PlaySE(SEManager.SE.Attack);
 			mp--;
-			p_Bullet.add(new GameObject("player_bullet.png",new Vector2(postion.x,postion.y-10)));
-			p_Bullet.add(new GameObject("player_bullet.png",new Vector2(postion.x+20,postion.y+5)));
-			p_Bullet.add(new GameObject("player_bullet.png",new Vector2(postion.x-20,postion.y+5)));
+			p_Bullet.add(new GameObject("image/player_bullet.png",new Vector2(postion.x,postion.y-10)));
+			p_Bullet.add(new GameObject("image/player_bullet.png",new Vector2(postion.x+20,postion.y+5)));
+			p_Bullet.add(new GameObject("image/player_bullet.png",new Vector2(postion.x-20,postion.y+5)));
 		}
 		for(int i = 0; i < p_Bullet.size();)
 		{

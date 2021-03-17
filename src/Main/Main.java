@@ -1,6 +1,7 @@
 package Main;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -75,12 +76,13 @@ class GameWindow extends JFrame implements Runnable{
 }
 
 class DrawCanvas extends JPanel{
-	AudioManager[] bgm = new AudioManager[] {new AudioManager("title.wav",0.5f),new AudioManager("buttle.wav",0.5f)};
+	AudioManager[] bgm = new AudioManager[] {new AudioManager("audio/title.wav",0.5f),new AudioManager("audio/buttle.wav",0.5f)};
 	Mapchip map;
-	Player player = new Player("PlayerFly001.png",Vector2.Zero);
-	Boss boss = new Boss("dragon1.png",Vector2.Zero,new Vector2(1.5f,1.5f));
+	GameObject frame = new GameObject("image/frame.png",new Vector2(400,250));
+	Player player = new Player("image/PlayerFly001.png",Vector2.Zero);
+	Boss boss = new Boss("image/dragon1.png",Vector2.Zero,new Vector2(1.5f,1.5f));
 	
-	Button btn = new Button("mapchip.png","スタート",200,200,400,100);
+	Button btn = new Button("image/frame_button.png","スタート",200,200,400,100);
 	int mainTimer;//UIのタイマー
 	int score;
 
@@ -120,6 +122,11 @@ class DrawCanvas extends JPanel{
 				map.DrawMapchip(g);
 				mainTimer += Time.flameTime;
 				
+				player.MoveDraw(g, boss);
+				boss.MoveDraw(g,player);
+				
+				frame.DrawObject(g);
+				
 				font = new Font("ＭＳ Ｐゴシック",Font.PLAIN,32);
 				g.setFont(font);
 				Text.drawString(g, "Time "+Time.MMSSFF(mainTimer), 433,20);
@@ -131,18 +138,19 @@ class DrawCanvas extends JPanel{
 				Text.drawString(g, "Score " + String.format("%07d", score), 433,60);
 				font = new Font("ＭＳ Ｐゴシック",Font.BOLD,48);
 				g.setFont(font);
+				
 				Text.drawString(g, "Player", 433,90);
 				Text.drawString(g, "Dragon", 433,210);
 				
-				player.MoveDraw(g, boss);
-				boss.MoveDraw(g,player);
-				
-				
 				if(boss.hp <= 0) SceneManager.nextScene = SceneManager.Scene.Clear;
 				if(player.hp <= 0) SceneManager.nextScene = SceneManager.Scene.GameOver;
+				if(KeyInput.pressedKey[KeyEvent.VK_O])SceneManager.nextScene = SceneManager.Scene.Clear;
 				
 				break;
 			case Clear:
+				font = new Font("ＭＳ Ｐゴシック",Font.PLAIN,48);
+				g.setFont(font);
+				Text.drawString(g, "Time "+Time.MMSSFF(mainTimer), 400,50,Text.AdjustWidth.Center,Text.AdjustHeight.Center);
 				font = new Font("ＭＳ Ｐゴシック",Font.BOLD,64);
 				g.setFont(font);
 				Text.drawString(g,"クリア",400, 100, Text.AdjustWidth.Center);
@@ -187,13 +195,13 @@ class DrawCanvas extends JPanel{
 		{
 			case Title:
 				bgm[0].Reset();
-				bgm[0].Play();
+				bgm[0].PlayLoop();
 				btn.text = "スタート";
 				break;
 			case Game:
 				bgm[0].Stop();
 				bgm[1].Reset();
-				bgm[1].Play();
+				bgm[1].PlayLoop();
 				player.Init();
 				boss.Init();
 				mainTimer = 0;
@@ -201,10 +209,12 @@ class DrawCanvas extends JPanel{
 				map = new Mapchip();
 				break;
 			case Clear:
+				SEManager.PlaySE(SEManager.SE.Clear);
 				bgm[1].Stop();
 				btn.text = "タイトル";
 				break;
 			case GameOver:
+				SEManager.PlaySE(SEManager.SE.Gameover);
 				bgm[1].Stop();
 				btn.text = "タイトル";
 				break;

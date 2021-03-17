@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 public class Boss extends GameObject
 {
-
 	ArrayList<Bullet> e_Bullet = new ArrayList<>();
 	ArrayList<FireFlower> fireFlower = new ArrayList<>();
 	ArrayList<Tracking> tracking = new ArrayList<>();
@@ -36,15 +35,12 @@ public class Boss extends GameObject
 		FireFlower,//花火
 		Tracking//追尾
 	}
-	
 	AttackPattern pattern;
 	
-	Boss(String img, Vector2 pos, Vector2 size) {
-		super(img, pos, size);
-	}
+	Boss(String img, Vector2 pos, Vector2 size) {super(img, pos, size);}
+	
 	void MoveDraw(Graphics g,Player player)
 	{
-		//TODO 画面は時に来たらタイマーを強制的に超えさせる。
 		moveTimer+=Time.flameTime;
 		if(moveTimer >= moveTime)
 		{
@@ -57,7 +53,6 @@ public class Boss extends GameObject
 			}
 			else
 			{
-				
 				moveTime = (int)(Math.random()*2000)+3000;
 				speed = new Vector2(Vector2.DegreeToVector((float)Math.random()*360));
 				speed.division(4);
@@ -72,6 +67,7 @@ public class Boss extends GameObject
 		}
 		movePostion(speed);
 		DrawObject(g);
+		
 		for(int i = 0; i < player.p_Bullet.size();)
 		{
 			if(player.p_Bullet.get(i).postion.x >= postion.x - size.x / 2
@@ -87,16 +83,6 @@ public class Boss extends GameObject
 			}
 			i++;//物を消すと移動処理されないので、消したときは足さずに次のループへ
 		}
-		/*
-		 * TODO 敵の挙動
-		 * 動く(上半分限る)5±2秒で動く
-		 * -----------
-		 * 倒し方
-		 * 30秒耐久(この間無敵)
-		 * 10秒間攻撃できる。(弾幕の数を減らす)
-		 * 大体3回繰り返す
-		 * クリア
-		 */
 		modeTimer += Time.flameTime;
 		if(invincible)
 		{
@@ -105,17 +91,20 @@ public class Boss extends GameObject
 				invincible = !invincible;
 				modeTimer -= 25000;
 			}
-			e_Bullet_Timer += Time.flameTime;
-			if(e_Bullet_Timer >= e_Bullet_Cool && pattern != AttackPattern.FireFlower)
+			if(pattern != AttackPattern.FireFlower)
 			{
-				e_Bullet_Timer -= e_Bullet_Cool;
-				//TODO 画像情報を毎回取得しているため1度だけで良い
-				e_Bullet.add(new Bullet("enemy_bullet.png", new Vector2(postion.x, postion.y-10)));
-				e_Bullet.get(e_Bullet.size()-1).speed 
-				= new Vector2(Vector2.DegreeToVector((float) ((Math.random() * (360)))));
-				e_Bullet.get(e_Bullet.size()-1).speed.times(2);
-				
+				e_Bullet_Timer += Time.flameTime;
+				if(e_Bullet_Timer >= e_Bullet_Cool)
+				{
+					e_Bullet_Timer -= e_Bullet_Cool;
+					//TODO 画像情報を毎回取得しているため1度だけで良い
+					e_Bullet.add(new Bullet("image/enemy_bullet.png", new Vector2(postion.x, postion.y-10)));
+					e_Bullet.get(e_Bullet.size()-1).speed 
+						= new Vector2(Vector2.DegreeToVector((float) ((Math.random() * (360)))));
+					e_Bullet.get(e_Bullet.size()-1).speed.times(2);
+				}
 			}
+			
 			//パターン攻撃
 			e_pBullet_Timer += Time.flameTime;
 			if(e_pBullet_Timer >= putternTime)
@@ -128,19 +117,19 @@ public class Boss extends GameObject
 					case Closs:
 						for(int i = 100; i < 400;i+=100)
 						{
-							e_Bullet.add(new Bullet("enemy_bullet.png",new Vector2(i,0)));
+							e_Bullet.add(new Bullet("image/enemy_bullet.png",new Vector2(i,0)));
 							e_Bullet.get(e_Bullet.size()-1).speed = new Vector2(0,3);
 						}
 						for(int i = 100; i < 500;i+=100)
 						{
-							e_Bullet.add(new Bullet("enemy_bullet.png",new Vector2(0,i)));
+							e_Bullet.add(new Bullet("image/enemy_bullet.png",new Vector2(0,i)));
 							e_Bullet.get(e_Bullet.size()-1).speed = new Vector2(3,0);
 						}
 						break;
 					case Pick:
 						for(int i = -40;i <= 40;i+=20)
 						{
-							e_Bullet.add(new Bullet("enemy_bullet.png", new Vector2(firePos)));
+							e_Bullet.add(new Bullet("image/enemy_bullet.png", new Vector2(firePos)));
 							e_Bullet.get(e_Bullet.size()-1).speed = new Vector2(Vector2.DegreeToVector(deg + i));
 							e_Bullet.get(e_Bullet.size()-1).speed.times(3);
 						}
@@ -148,7 +137,7 @@ public class Boss extends GameObject
 					case Voluted:
 						for(int i = -144;i <= 144;i+=72)
 						{
-							e_Bullet.add(new Bullet("enemy_bullet.png", new Vector2(firePos)));
+							e_Bullet.add(new Bullet("image/enemy_bullet.png", new Vector2(firePos)));
 							e_Bullet.get(e_Bullet.size()-1).speed = new Vector2(Vector2.DegreeToVector(volDeg + i));
 							e_Bullet.get(e_Bullet.size()-1).speed.times(3);
 						}
@@ -157,10 +146,10 @@ public class Boss extends GameObject
 					case Voluted2:
 						for(int i = -144;i <= 144;i+=72)
 						{
-							e_Bullet.add(new Bullet("enemy_bullet.png", new Vector2(firePos)));
+							e_Bullet.add(new Bullet("image/enemy_bullet.png", new Vector2(firePos)));
 							e_Bullet.get(e_Bullet.size()-1).speed = new Vector2(Vector2.DegreeToVector(volDeg + i));
 							e_Bullet.get(e_Bullet.size()-1).speed.times(3);
-							e_Bullet.add(new Bullet("enemy_bullet.png", new Vector2(firePos)));
+							e_Bullet.add(new Bullet("image/enemy_bullet.png", new Vector2(firePos)));
 							e_Bullet.get(e_Bullet.size()-1).speed = new Vector2(Vector2.DegreeToVector(volDeg2 + i));
 							e_Bullet.get(e_Bullet.size()-1).speed.times(3);
 						}
@@ -169,10 +158,10 @@ public class Boss extends GameObject
 						break;
 					case FireFlower:
 						for(int i = -180;i < 180;i+=60)
-							fireFlower.add(new FireFlower("enemy_bullet.png", new Vector2(firePos), new Vector2(Vector2.DegreeToVector(deg + i)),1));
+							fireFlower.add(new FireFlower("image/enemy_bullet.png", new Vector2(firePos), new Vector2(Vector2.DegreeToVector(deg + i)),1));
 						break;
 					case Tracking:
-							tracking.add(new Tracking("enemy_bullet.png", new Vector2(firePos), new Vector2(Vector2.DegreeToVector(deg)),1));
+							tracking.add(new Tracking("image/enemy_bullet.png", new Vector2(firePos), new Vector2(Vector2.DegreeToVector(deg)),1));
 						break;
 				}
 			}
@@ -325,9 +314,5 @@ public class Boss extends GameObject
 		moveTime = 4000;
 	}
 	
-	void Add(Bullet bullet)
-	{
-		e_Bullet.add(bullet);
-	}
-
+	void Add(Bullet bullet){ e_Bullet.add(bullet); }
 }

@@ -40,12 +40,11 @@ public class Button extends JPanel{
 			Text.drawString(g, text, (int)(postion.x + size.x / 2), (int)(postion.y + size.y / 2), Text.AdjustWidth.Center, Text.AdjustHeight.Center);
 			if(MouseInput.pressed)
 			{
-				Vector2 pos = MouseInput.pressedPostion;
-				//pos.times(new Vector2(Main.MagniWidth,Main.MagniHeight));
+				Vector2 pos = new Vector2(MouseInput.pressedPostion);
 				Vector2 bpos = new Vector2(postion);
 				bpos.times(new Vector2(Main.MagniWidth,Main.MagniHeight));
-				if(bpos.x <= pos.x && bpos.x + size.x >= pos.x
-				&& bpos.y <= pos.y && bpos.y + size.y >= pos.y)
+				if(bpos.x<= pos.x && bpos.x + size.x*Main.MagniWidth >= pos.x
+				&& bpos.y<= pos.y && bpos.y + size.y*Main.MagniHeight>= pos.y)
 				pressed = true;
 			}
 		}

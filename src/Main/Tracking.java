@@ -26,7 +26,7 @@ public class Tracking extends Bullet{
 		else
 		{
 			speed.times(velocity);
-			person.Add(new Bullet("enemy_bullet.png", new Vector2(postion),speed));
+			person.Add(new Bullet("image/enemy_bullet.png", new Vector2(postion),speed));
 		}
 	}
 }

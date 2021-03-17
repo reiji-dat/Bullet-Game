@@ -3,12 +3,17 @@ package Main;
 public class SEManager
 {
 	public static SEManager Instance = new SEManager();
-	private AudioManager sound[] = new AudioManager[]{new AudioManager("select.wav"),new AudioManager("attack.wav"),new AudioManager("damage.wav")};
+	final String pt = "audio/";
+	private AudioManager sound[] = 
+			new AudioManager[]{new AudioManager(pt+"select.wav"),new AudioManager(pt+"attack.wav"),new AudioManager(pt+"damage.wav"),
+								new AudioManager(pt+"clear.wav"),new AudioManager(pt+"gameover.wav")};
 	enum SE
 	{
 		Select,
 		Attack,
-		Damage
+		Damage,
+		Clear,
+		Gameover
 	}
 	
 	public static void PlaySE(SE se)
@@ -24,6 +29,12 @@ public class SEManager
 				break;
 			case Damage:
 				n = 2;
+				break;
+			case Clear:
+				n = 3;
+				break;
+			case Gameover:
+				n = 4;
 				break;
 		}
 		Instance.sound[n].Reset();

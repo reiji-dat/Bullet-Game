@@ -39,7 +39,6 @@ public class GameObject extends JPanel{
 	}
 	
 	//指定した数値分移動します
-
 	void movePostion(Vector2 v)
 	{
 		postion.plus(v);

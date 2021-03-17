@@ -8,7 +8,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 public class Mapchip extends JPanel{
-	Image mapImages = String2Image.getImage("mapchip.png");
+	Image mapImages = String2Image.getImage("image/mapchip.png");
 	Point size;
 	
 	Point chipSize = new Point(32,32);

@@ -33,7 +33,7 @@ public class FireFlower extends Bullet{
 			{
 				Vector2 vec = new Vector2(Vector2.DegreeToVector(i));
 				vec.times(3);
-				person.Add(new Bullet("enemy_bullet.png", new Vector2(postion),vec));
+				person.Add(new Bullet("image/enemy_bullet.png", new Vector2(postion),vec));
 			}
 			end = true;
 		}
