@@ -85,6 +85,8 @@ class DrawCanvas extends JPanel{
 
 	int highScore = -1;
 	
+	Ranking rank = new Ranking(5,false,1500000,1500000,1500000,1500000,1500000);
+	
 	public void paintComponent(Graphics g) 
 	{
 		super.paintComponent(g);
@@ -152,15 +154,15 @@ class DrawCanvas extends JPanel{
 			case Clear:
 				
 				//この場合値が小さいほど良い。つまり、ランキングは昇順
-				//ハイスコア未設定の場合はマイナスにしておく。
-				highScore = mainTimer < highScore || highScore < 0 ? mainTimer : highScore;
+				//ランキングに追加
+				
 				
 				font = new Font("ＭＳ Ｐゴシック",Font.PLAIN,55);
 				g.setFont(font);
 				Text.drawString(g, "Time "+Time.MMSSFF(mainTimer), 400,50,Text.AdjustWidth.Center,Text.AdjustHeight.Center);
 				font = new Font("ＭＳ Ｐゴシック",Font.PLAIN,32);
 				g.setFont(font);
-				Text.drawString(g, "HighScore "+Time.MMSSFF(highScore), 400,100,Text.AdjustWidth.Center,Text.AdjustHeight.Center);
+				Text.drawString(g, "HighScore "+Time.MMSSFF(rank.data[0]), 400,100,Text.AdjustWidth.Center,Text.AdjustHeight.Center);
 				font = new Font("ＭＳ Ｐゴシック",Font.BOLD,64);
 				g.setFont(font);
 				Text.drawString(g,"クリア",400, 125, Text.AdjustWidth.Center);
@@ -200,6 +202,10 @@ class DrawCanvas extends JPanel{
 				font = new Font("ＭＳ Ｐゴシック",Font.BOLD,64);
 				g.setFont(font);
 				Text.drawString(g,"ランキング",400, 10, Text.AdjustWidth.Center);
+				font = new Font("ＭＳ Ｐゴシック",Font.PLAIN,48);
+				g.setFont(font);
+				for(int i = 0; i < rank.data.length; i++)Text.drawString(g,(i+1)+" : "+Time.MMSSFF(rank.data[i]),200, 100 + i*54);
+				
 				bck.DrawButton(g);
 				if(bck.pressed) 
 				{
@@ -237,6 +243,7 @@ class DrawCanvas extends JPanel{
 				map = new Mapchip();
 				break;
 			case Clear:
+				rank.Add(mainTimer);
 				SEManager.PlaySE(SEManager.SE.Clear);
 				bgm[1].Stop();
 				btn.text = "タイトル";
