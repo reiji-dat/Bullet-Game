@@ -17,10 +17,6 @@ public class Main{
 	public static final float MagniHeight = (float)Height / (float)DefaultHeight;
 	
 	public static void main(String[] args) throws Exception{
-		System.out.println(Width);
-		System.out.println(DefaultWidth);
-		System.out.println((float)Width / (float)DefaultWidth);
-		System.out.println(Main.MagniWidth);
 		GameWindow gw = new GameWindow("ボス戦シューティング",Width,Height);
 		gw.add(new DrawCanvas());
 		gw.setVisible(true);
@@ -31,6 +27,7 @@ public class Main{
 
 //JFrameを継承している。
 class GameWindow extends JFrame implements Runnable{
+	
 	private Thread th = null;
 	
 	public GameWindow(String title, int width, int height) 
@@ -42,8 +39,6 @@ class GameWindow extends JFrame implements Runnable{
 		setResizable(false);
 		addKeyListener(new KeyInput());
 		addMouseListener(new MouseInput());
-		
-		
 	}
 	
 	//ゲームループの開始
@@ -61,10 +56,11 @@ class GameWindow extends JFrame implements Runnable{
 	}
 	
 	public void run(){
-		//ゲームループ（定期的に再描画を実行）
+		//ゲームループ
+		//このままだと10ミリ秒+描画時間で微妙に遅くなっている。
 		while(th != null){
 			try{
-				Thread.sleep(10);//1000で1秒
+				Thread.sleep(10);//10ミリ秒休む
 				repaint();
 			}
 			catch(InterruptedException e)
@@ -79,13 +75,16 @@ class DrawCanvas extends JPanel{
 	AudioManager[] bgm = new AudioManager[] {new AudioManager("audio/title.wav",0.5f),new AudioManager("audio/buttle.wav",0.5f)};
 	Mapchip map;
 	GameObject frame = new GameObject("image/frame.png",new Vector2(400,250));
-	Player player = new Player("image/PlayerFly001.png",Vector2.Zero);
-	Boss boss = new Boss("image/dragon1.png",Vector2.Zero,new Vector2(1.5f,1.5f));
+	Player player = new Player(Vector2.Zero,"image/PlayerFly001.png","image/PlayerFly002.png","image/PlayerFly003.png");
+	Boss boss = new Boss(Vector2.Zero,new Vector2(1.5f,1.5f),"image/dragon1.png","image/dragon2.png","image/dragon3.png","image/dragon4.png","image/dragon5.png");
 	
 	Button btn = new Button("image/frame_button.png","スタート",200,200,400,100);
+	Button rnk = new Button("image/frame_button.png","ランキング",200,325,400,100);
+	Button bck = new Button("image/frame_button.png","↩",10,10,100,100);
 	int mainTimer;//UIのタイマー
-	int score;
 
+	int highScore = -1;
+	
 	public void paintComponent(Graphics g) 
 	{
 		super.paintComponent(g);
@@ -114,6 +113,13 @@ class DrawCanvas extends JPanel{
 					SceneManager.nextScene = SceneManager.Scene.Game;
 				}
 				
+				rnk.DrawButton(g);
+				if(rnk.pressed)
+				{
+					SEManager.PlaySE(SEManager.SE.Select);
+					SceneManager.nextScene = SceneManager.Scene.Ranking;
+				}
+				
 				font = new Font(null,Font.PLAIN,16);
 				g.setFont(font);
 				Text.drawString(g,"©2021 - Ho'pe",400, 500, Text.AdjustWidth.Center,Text.AdjustHeight.Bottom);
@@ -124,44 +130,56 @@ class DrawCanvas extends JPanel{
 				
 				player.MoveDraw(g, boss);
 				boss.MoveDraw(g,player);
-				
 				frame.DrawObject(g);
 				
-				font = new Font("ＭＳ Ｐゴシック",Font.PLAIN,32);
+				font = new Font("ＭＳ Ｐゴシック",Font.PLAIN,42);
 				g.setFont(font);
 				Text.drawString(g, "Time "+Time.MMSSFF(mainTimer), 433,20);
+				font = new Font("ＭＳ Ｐゴシック",Font.PLAIN,32);
+				g.setFont(font);
 				Text.drawString(g, "HP " + String.format("%2d", player.hp) + "/" + String.format("%2d", player.MaxHP), 433,140);
 				Text.drawString(g, "MP " + String.format("%2d", player.mp) + "/" + String.format("%2d", player.MaxMP), 433,170);
 				Text.drawString(g, "HP " + String.format("%2d", boss.hp) + "/" + String.format("%2d", boss.BossMaxHP), 433,256);
-				font = new Font("ＭＳ Ｐゴシック",Font.PLAIN,24);
-				g.setFont(font);
-				Text.drawString(g, "Score " + String.format("%07d", score), 433,60);
 				font = new Font("ＭＳ Ｐゴシック",Font.BOLD,48);
 				g.setFont(font);
-				
 				Text.drawString(g, "Player", 433,90);
 				Text.drawString(g, "Dragon", 433,210);
 				
 				if(boss.hp <= 0) SceneManager.nextScene = SceneManager.Scene.Clear;
 				if(player.hp <= 0) SceneManager.nextScene = SceneManager.Scene.GameOver;
 				if(KeyInput.pressedKey[KeyEvent.VK_O])SceneManager.nextScene = SceneManager.Scene.Clear;
-				
 				break;
 			case Clear:
-				font = new Font("ＭＳ Ｐゴシック",Font.PLAIN,48);
+				
+				//この場合値が小さいほど良い。つまり、ランキングは昇順
+				//ハイスコア未設定の場合はマイナスにしておく。
+				highScore = mainTimer < highScore || highScore < 0 ? mainTimer : highScore;
+				
+				font = new Font("ＭＳ Ｐゴシック",Font.PLAIN,55);
 				g.setFont(font);
 				Text.drawString(g, "Time "+Time.MMSSFF(mainTimer), 400,50,Text.AdjustWidth.Center,Text.AdjustHeight.Center);
+				font = new Font("ＭＳ Ｐゴシック",Font.PLAIN,32);
+				g.setFont(font);
+				Text.drawString(g, "HighScore "+Time.MMSSFF(highScore), 400,100,Text.AdjustWidth.Center,Text.AdjustHeight.Center);
 				font = new Font("ＭＳ Ｐゴシック",Font.BOLD,64);
 				g.setFont(font);
-				Text.drawString(g,"クリア",400, 100, Text.AdjustWidth.Center);
+				Text.drawString(g,"クリア",400, 125, Text.AdjustWidth.Center);
 				
 				font = new Font(null,Font.PLAIN,32);
 				g.setFont(font);
+				
 				btn.DrawButton(g);
 				if(btn.pressed)
 				{
 					SEManager.PlaySE(SEManager.SE.Select);
 					SceneManager.nextScene = SceneManager.Scene.Title;
+				}
+				
+				rnk.DrawButton(g);
+				if(rnk.pressed)
+				{
+					SEManager.PlaySE(SEManager.SE.Select);
+					SceneManager.nextScene = SceneManager.Scene.Ranking;
 				}
 				break;
 			case GameOver:
@@ -173,6 +191,17 @@ class DrawCanvas extends JPanel{
 				g.setFont(font);
 				btn.DrawButton(g);
 				if(btn.pressed) 
+				{
+					SEManager.PlaySE(SEManager.SE.Select);
+					SceneManager.nextScene = SceneManager.Scene.Title;
+				}
+				break;
+			case Ranking:
+				font = new Font("ＭＳ Ｐゴシック",Font.BOLD,64);
+				g.setFont(font);
+				Text.drawString(g,"ランキング",400, 10, Text.AdjustWidth.Center);
+				bck.DrawButton(g);
+				if(bck.pressed) 
 				{
 					SEManager.PlaySE(SEManager.SE.Select);
 					SceneManager.nextScene = SceneManager.Scene.Title;
@@ -205,7 +234,6 @@ class DrawCanvas extends JPanel{
 				player.Init();
 				boss.Init();
 				mainTimer = 0;
-				score = 0;
 				map = new Mapchip();
 				break;
 			case Clear:
@@ -217,6 +245,9 @@ class DrawCanvas extends JPanel{
 				SEManager.PlaySE(SEManager.SE.Gameover);
 				bgm[1].Stop();
 				btn.text = "タイトル";
+				break;
+			case Ranking:
+				bgm[0].Stop();
 				break;
 			default:
 				break;

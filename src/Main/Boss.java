@@ -26,6 +26,9 @@ public class Boss extends GameObject
 	boolean move = false;
 	Vector2 speed = new Vector2(Vector2.Zero);
 	
+	final int ChangeTime = 100;
+	int anmTimer = 0;
+	
 	enum AttackPattern
 	{
 		Closs,//縦横
@@ -37,10 +40,12 @@ public class Boss extends GameObject
 	}
 	AttackPattern pattern;
 	
-	Boss(String img, Vector2 pos, Vector2 size) {super(img, pos, size);}
+	Boss(Vector2 pos, Vector2 size,String... img) {super(pos, size, img);}
 	
 	void MoveDraw(Graphics g,Player player)
 	{
+		
+		
 		moveTimer+=Time.flameTime;
 		if(moveTimer >= moveTime)
 		{
@@ -66,7 +71,12 @@ public class Boss extends GameObject
 			movePostion(speed);
 		}
 		movePostion(speed);
-		DrawObject(g);
+		
+		anmTimer+=Time.flameTime;
+		int t = anmTimer / ChangeTime;
+		t = t % 8;
+		t = -Math.abs(-t+4)+4;//往復アニメーション処理
+		DrawObject(g,t);
 		
 		for(int i = 0; i < player.p_Bullet.size();)
 		{
@@ -312,6 +322,7 @@ public class Boss extends GameObject
 		putternTime = 500;
 		moveTimer = 0;
 		moveTime = 4000;
+		anmTimer = 0;
 	}
 	
 	void Add(Bullet bullet){ e_Bullet.add(bullet); }

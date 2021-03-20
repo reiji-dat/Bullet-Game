@@ -1,7 +1,6 @@
 package Main;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.sound.sampled.AudioFormat;
@@ -30,35 +29,32 @@ public class AudioManager {
 		System.out.println(vol);
 		setVolume(vol);
 	}
-	
-	//TODO 後で解析
+
 	Clip createClip(URL name) {
-		//指定されたURLのオーディオ入力ストリームを取得
-		
-		
-		
+		//引数を使用しオーディオインプットストリーム(AIS)を取得。
+		//try - catch 文は例外時の処理を行う処理である。
 		try (AudioInputStream ais = AudioSystem.getAudioInputStream(name)){
-			
-			//ファイルの形式取得
-			AudioFormat af = ais.getFormat();
-			
-			//単一のオーディオ形式を含む指定した情報からデータラインの情報オブジェクトを構築
-			DataLine.Info dataLine = new DataLine.Info(Clip.class,af);
-			
-			//指定された Line.Info オブジェクトの記述に一致するラインを取得
-			Clip c = (Clip)AudioSystem.getLine(dataLine);
-			
-			//再生準備完了
+			System.out.println("AIS\t\t\t"+ais);
+			//ファイルの形式取得。
+			AudioFormat format = ais.getFormat();
+			System.out.println("Format\t\t"+format);
+			//フォーマット情報をデータラインに設定
+			DataLine.Info data = new DataLine.Info(Clip.class,format);
+			System.out.println("DataLine\t"+data);
+			//データラインをクリップに代入。
+			Clip c = (Clip)AudioSystem.getLine(data);
+			System.out.println("Clip\t\t"+c);
+			//AISをクリップに開く
 			c.open(ais);
-			
 			return c;
-		} catch (MalformedURLException e) {
+		} catch (UnsupportedAudioFileException e) {//ファイルタイプが異なる、対応していない場合
+			System.out.println("未対応の形式の可能性があります。");
 			e.printStackTrace();
-		} catch (UnsupportedAudioFileException e) {
+		} catch (IOException e) {//入出力の失敗
+			System.out.println("入力または出力が失敗した可能性があります。");
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (LineUnavailableException e) {
+		} catch (LineUnavailableException e) {//ラインが使用不可
+			System.out.println("ラインが使用不可の可能性があります。");
 			e.printStackTrace();
 		}
 		return null;
@@ -93,10 +89,8 @@ public class AudioManager {
 	
 	void setVolume(float vol)
 	{
-		
 		volume = vol;//この変数は基本いらないが現在の音量を画面上に表示するときに役に立つ？
 		FloatControl ctrl = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
 		ctrl.setValue((float)Math.log10((float)volume)*20);
 	}
-	
 }

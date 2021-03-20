@@ -8,7 +8,8 @@ public class SceneManager {
 		Title,
 		Game,
 		Clear,
-		GameOver
+		GameOver,
+		Ranking
 	}
 	
 	public static Scene currentScene = Scene.None;

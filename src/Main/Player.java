@@ -19,10 +19,10 @@ public class Player extends GameObject{
 	final int InvTime = 1000;
 	int invTimer;
 	
-	Player(String img, Vector2 pos) 
-	{
-		super(img, pos);
-	}
+	final int ChangeTime = 100;
+	int anmTimer = 0;
+	
+	Player( Vector2 pos, String... img) {super(pos, img);}
 	
 	//敵が複数いる場合はメインにゲッターを用意して情報を取得
 	//今回は1体だけなので引数にしている
@@ -51,7 +51,12 @@ public class Player extends GameObject{
 		postion.x = postion.x > 400 ? 400 : postion.x;
 		postion.y = postion.y < 0 ? 0 : postion.y;
 		postion.y = postion.y > 500 ? 500 : postion.y;
-		DrawObject(g);
+		
+		anmTimer += Time.flameTime;
+		int t = anmTimer / ChangeTime;
+		t = t % 4;//定数の方が尚良い
+		t = -Math.abs(-t+2)+2;//往復アニメーション処理
+		DrawObject(g,t);
 		
 		//弾
 		if(bulletTimer < 500) bulletTimer += Time.flameTime;
@@ -92,5 +97,6 @@ public class Player extends GameObject{
 		postion = new Vector2(200,400);
 		invincible = false;
 		invTimer = 0;
+		anmTimer = 0;
 	}
 }
