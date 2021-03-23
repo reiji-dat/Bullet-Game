@@ -1,5 +1,6 @@
 package Main;
 
+//SEを再生するクラス
 public class SEManager
 {
 	public static SEManager Instance = new SEManager();

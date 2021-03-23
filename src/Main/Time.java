@@ -1,11 +1,12 @@
 package Main;
 
+//時間を計測するための処理
 public class Time{
 	public static Time Instance = new Time(); 
-	
 	long pastTime;
 	long currentTime;
 	public static long flameTime;
+	
 	Time()
 	{
 		currentTime = System.currentTimeMillis();
@@ -17,9 +18,9 @@ public class Time{
 		flameTime = Instance.currentTime - Instance.pastTime;
 	}
 	
+	//時間をストリング型に直す処理
 	public static String MMSSFF(int time)
 	{
-		//TODO ここに代入された時間をストリング型に直す処理
 		int frames = (time % 1000) /10;
 		time /= 1000;
 		int seconds = time % 60;

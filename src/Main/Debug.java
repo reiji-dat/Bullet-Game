@@ -1,5 +1,6 @@
 package Main;
 
+//デバッグ用(このプロジェクトでは現在使われていない)
 public class Debug {
 	public static float FrameRate()
 	{

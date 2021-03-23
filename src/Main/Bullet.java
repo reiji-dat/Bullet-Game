@@ -11,5 +11,4 @@ public class Bullet extends GameObject{
 		super(img, pos);
 		this.speed = speed;
 	}
-
 }

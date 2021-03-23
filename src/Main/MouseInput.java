@@ -10,18 +10,11 @@ public class MouseInput implements MouseListener
 	public static boolean released = false;
 	public static Vector2 pressedPostion;
 	public static Vector2 releasedPostion;
-	public void mouseClicked(MouseEvent e){
-		
-	}
+	public void mouseClicked(MouseEvent e){}
 
-	public void mouseEntered(MouseEvent e){
-		
-
-	}
-
-	public void mouseExited(MouseEvent e){
-
-	}
+	//これがないとエラーになる
+	public void mouseEntered(MouseEvent e){}
+	public void mouseExited(MouseEvent e){}
 
 	public void mousePressed(MouseEvent e){
 		pressed = true;

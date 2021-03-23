@@ -6,33 +6,33 @@ import java.util.ArrayList;
 
 public class Player extends GameObject{
 	ArrayList<GameObject> p_Bullet = new ArrayList<>();
-	float playerSpeed = 3;
-	final float P_BulletSpeed = 4;
-	final int MaxHP = 5;
-	int hp;
-	final int MaxMP = 30;
-	int mp;
+	final float Speed = 3;//プレイヤーの移動速度
+	final float BulletSpeed = 4;//弾の速度
+	final int MaxHP = 5;//最大体力
+	int hp;//体力
 	
+	final int MaxMP = 30;//最大弾数
+	int mp;//弾数
 	int bulletTimer;//MP回復用タイマー
 	
-	boolean invincible = false;
-	final int InvTime = 1000;
-	int invTimer;
+	boolean invincible = false;//ダメージ時の無敵
+	final int InvTime = 1000;	//ダメージ時の無敵時間
+	int invTimer;				//ダメージ時の無敵時間タイマー
 	
+	//アニメーション
 	final int ChangeTime = 100;
 	int anmTimer = 0;
 	
 	Player( Vector2 pos, String... img) {super(pos, img);}
 	
-	//敵が複数いる場合はメインにゲッターを用意して情報を取得
+	//敵が複数いる場合はメインにゲッターを用意して情報を取得？
 	//今回は1体だけなので引数にしている
-	//TODO ボスクラスを作ったら第3,4引数はいらない
 	void MoveDraw(Graphics g,GameObject boss)
 	{
-		if(invincible)
+		if(invincible)//無敵時間は点滅する
 		{
 			invTimer += Time.flameTime;
-			show = Math.sin(invTimer/20) <= 0 ? true : false;
+			show = Math.sin(invTimer/20) <= 0 ? true : false;//sin波を利用(数字はちょうどいい感じに調整)
 			if(invTimer>=InvTime)
 			{
 				show = true;
@@ -41,10 +41,10 @@ public class Player extends GameObject{
 			}
 		}
 		//移動
-		if(KeyInput.inputKey[KeyEvent.VK_W]) postion.y -= playerSpeed;
-		if(KeyInput.inputKey[KeyEvent.VK_A]) postion.x -= playerSpeed;
-		if(KeyInput.inputKey[KeyEvent.VK_S]) postion.y += playerSpeed;
-		if(KeyInput.inputKey[KeyEvent.VK_D]) postion.x += playerSpeed;
+		if(KeyInput.inputKey[KeyEvent.VK_W]) postion.y -= Speed;
+		if(KeyInput.inputKey[KeyEvent.VK_A]) postion.x -= Speed;
+		if(KeyInput.inputKey[KeyEvent.VK_S]) postion.y += Speed;
+		if(KeyInput.inputKey[KeyEvent.VK_D]) postion.x += Speed;
 		
 		//移動制限
 		postion.x = postion.x < 0 ? 0 : postion.x;
@@ -62,7 +62,6 @@ public class Player extends GameObject{
 		if(bulletTimer < 500) bulletTimer += Time.flameTime;
 		else if(mp < MaxMP)
 		{
-			
 			bulletTimer -= 500;
 			mp++;
 		}
@@ -77,7 +76,7 @@ public class Player extends GameObject{
 		}
 		for(int i = 0; i < p_Bullet.size();)
 		{
-			p_Bullet.get(i).postion.y-=P_BulletSpeed;
+			p_Bullet.get(i).postion.y-=BulletSpeed;
 			if(p_Bullet.get(i).postion.y < 0 || p_Bullet.get(i).postion.x < 0 || p_Bullet.get(i).postion.x > 400) 
 			{
 				p_Bullet.remove(i);
@@ -88,6 +87,7 @@ public class Player extends GameObject{
 		}
 	}
 	
+	//初期化
 	void Init()
 	{
 		bulletTimer = 0;

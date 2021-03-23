@@ -5,13 +5,13 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 
 public class Text {
+	//右寄りか左よりか中央か又は上に寄せるか下に寄せるか
 	public static enum AdjustWidth
 	{
 		Center,
 		Right,
 		Left
 	}
-	
 	public static enum AdjustHeight
 	{
 		Center,
@@ -19,6 +19,7 @@ public class Text {
 		Bottom
 	}
 	
+	//文字を表示
 	public static void drawString(Graphics g,String text,int x,int y,AdjustWidth wid, AdjustHeight hei)
 	{
 		x = (int)(x * Main.MagniWidth);
@@ -50,7 +51,7 @@ public class Text {
 				y += fm.getMaxAscent();
 				break;
 			case Bottom:
-				y -= fm.getMaxAscent() / 2;//2で割ったほうがちょうどよい
+				y -= fm.getMaxAscent() / 2;//2で割ったほうがちょうどよい理由を後で調べる
 				break;
 		}
 		g.drawString(text, x, y);

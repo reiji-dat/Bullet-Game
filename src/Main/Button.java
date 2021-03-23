@@ -14,8 +14,7 @@ public class Button extends JPanel{
 	Vector2 size = null;
 	Button(String img,String text, int x,int y,int width,int height)
 	{
-		URL url=this.getClass().getResource(img);
-		System.out.println(url);
+		URL url=this.getClass().getResource(img);//一度URLに変換しないとエクスポートできない
 		try {
 			image = createImage((ImageProducer) url.getContent());
 		}catch(Exception ex){
@@ -28,7 +27,6 @@ public class Button extends JPanel{
 	
 	void DrawButton(Graphics g)
 	{
-		super.paintComponent(g);
 		if(pressed)
 		{
 			pressed = false;
@@ -45,7 +43,7 @@ public class Button extends JPanel{
 				bpos.times(new Vector2(Main.MagniWidth,Main.MagniHeight));
 				if(bpos.x<= pos.x && bpos.x + size.x*Main.MagniWidth >= pos.x
 				&& bpos.y<= pos.y && bpos.y + size.y*Main.MagniHeight>= pos.y)
-				pressed = true;
+					pressed = true;
 			}
 		}
 	}

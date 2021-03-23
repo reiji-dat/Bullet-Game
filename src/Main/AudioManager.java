@@ -60,6 +60,7 @@ public class AudioManager {
 		return null;
 	}
 	
+	//これらはいらないかもしれないが分かりやすいため設定した
 	void Play()
 	{
 		clip.start();
@@ -91,6 +92,8 @@ public class AudioManager {
 	{
 		volume = vol;//この変数は基本いらないが現在の音量を画面上に表示するときに役に立つ？
 		FloatControl ctrl = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
+		//普通に数字を設定するだけだと上手く動作しなかったため
+		//https://nompor.com/2017/12/14/post-128/ こちらを参考にした
 		ctrl.setValue((float)Math.log10((float)volume)*20);
 	}
 }

@@ -6,8 +6,8 @@ import java.net.URL;
 
 import javax.swing.JPanel;
 
+//文字列から画像に変換する処理
 public class String2Image extends JPanel{
-
 	public static String2Image Instance = new String2Image();
 	public static Image getImage(String img)
 	{
@@ -18,5 +18,4 @@ public class String2Image extends JPanel{
 			return  null;
 		}
 	}
-	
 }

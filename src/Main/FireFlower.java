@@ -3,31 +3,28 @@ package Main;
 import java.awt.Graphics;
 
 public class FireFlower extends Bullet{
-	final float DiffDistance = 100;
-	float currentDist = 0;
-	float velocity;
+	final float DiffDistance = 100;//拡散する距離
+	float currentDist = 0;//発射されて進んだ距離
+	float velocity;//速度
 	
-	boolean diffusion = false;
-	boolean end = false;
+	boolean end = false;//拡散したか
 	
-	FireFlower(String img, Vector2 pos, Vector2 speed, float vel) {
-		
+	FireFlower(String img, Vector2 pos, Vector2 speed, float vel) 
+	{
 		super(img, pos, speed);
-		System.out.println("撃った");
 		velocity = vel;
 		this.speed.times(vel);
 	}
 	
 	void MoveDraw(Graphics g, Boss person)
 	{
-		
-		if(currentDist <= DiffDistance)
+		if(currentDist <= DiffDistance)//拡散前
 		{
 			currentDist+=velocity;
 			movePostion(speed);
 			DrawObject(g);
 		}
-		else
+		else//拡散後
 		{
 			for(int i = 0;i < 360;i+=36)
 			{
