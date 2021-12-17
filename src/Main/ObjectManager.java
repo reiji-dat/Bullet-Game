@@ -1,8 +1,11 @@
 package Main;
 
+import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.List;
+
 public class ObjectManager
 {
-	/*
 	public static List<GameObject> objects = new ArrayList<GameObject>();
 
 	public static void UpdateObjects(Graphics g)
@@ -57,5 +60,4 @@ public class ObjectManager
 		}
 		objects.clear();
 	}
-	*/
 }

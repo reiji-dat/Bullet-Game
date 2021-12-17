@@ -23,11 +23,12 @@ public class Player extends GameObject{
 	final int ChangeTime = 100;
 	int anmTimer = 0;
 
-	Player( Vector2 pos, String... img) {super(pos,"player", img);}
+	Player( Vector2 pos, String... img) {super(pos,Tag.Player, img);}
 
 	//敵が複数いる場合はメインにゲッターを用意して情報を取得？
 	//今回は1体だけなので引数にしている
-	public void MoveDraw(Graphics g)
+	@Override
+	public void Update(Graphics g)
 	{
 		//super.Update(g);
 		if(invincible)//無敵時間は点滅する
@@ -59,6 +60,7 @@ public class Player extends GameObject{
 		t = -Math.abs(-t+2)+2;//往復アニメーション処理
 		DrawObject(g,t);
 
+		/*
 		//弾
 		if(bulletTimer < 500) bulletTimer += Time.flameTime;
 		else if(mp < MaxMP)
@@ -86,15 +88,17 @@ public class Player extends GameObject{
 			p_Bullet.get(i).DrawObject(g);
 			i++;//消すとずれるので、消したときは足さずに次のループへ
 		}
+		*/
 	}
 
 	//初期化
-	void Init()
+	@Override
+	public void Start()
 	{
 		bulletTimer = 0;
 		hp = MaxHP;
 		mp = MaxMP;
-		p_Bullet.clear();
+		//p_Bullet.clear();
 		postion = new Vector2(200,400);
 		invincible = false;
 		invTimer = 0;

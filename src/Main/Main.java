@@ -100,10 +100,10 @@ class GameScene extends BaseScene
 		super.Update(g);
 		Font font;
 
-		map.DrawMapchip(g);//マップチップ表示
+		//map.DrawMapchip(g);//マップチップ表示
 		mainTimer += Time.flameTime;
 
-		player.MoveDraw(g);	//プレイヤー表示
+		//player.MoveDraw(g);	//プレイヤー表示
 		boss.MoveDraw(g,player);	//ボス表示
 		frame.DrawObject(g);		//フレーム表示
 
@@ -140,7 +140,6 @@ class GameScene extends BaseScene
 	public void Start()
 	{
 		BGMPlayer.PlayBGM(BGMPlayer.BGM.Buttle);
-		player.Init();
 		boss.Init();
 		mainTimer = 0;
 	}

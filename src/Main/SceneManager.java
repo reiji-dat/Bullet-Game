@@ -112,7 +112,7 @@ class BaseScene extends JPanel
 			start = true;
 		}
 
-		//ObjectManager.UpdateObjects(g);
+		ObjectManager.UpdateObjects(g);
 	}
 
 	public void Start()
@@ -122,6 +122,6 @@ class BaseScene extends JPanel
 
 	public void OnDestroy()
 	{
-		//ObjectManager.AllDestroyGameObjects();
+		ObjectManager.AllDestroyGameObjects();
 	}
 }

@@ -5,9 +5,8 @@ import java.awt.Image;
 import java.awt.Point;
 
 import javax.swing.ImageIcon;
-import javax.swing.JPanel;
 
-public class Mapchip extends JPanel{
+public class Mapchip extends GameObject{
 	//初期化で設定すればMain側で自由度の高いマップが作れる
 	Image mapImages = String2Image.getImage("image/mapchip.png");
 	//intなのでポイントにした
@@ -20,7 +19,7 @@ public class Mapchip extends JPanel{
 	//初期化
 	Mapchip()
 	{
-		//super(Vector2.Zero);
+		super(Vector2.Zero, Tag.Map, "");
 		ImageIcon icon = new ImageIcon(mapImages);
 		size = new Point(icon.getIconWidth(), icon.getIconHeight());
 		split = new Point(size.x / chipSize.x, size.y / chipSize.y);
@@ -60,11 +59,14 @@ public class Mapchip extends JPanel{
 								{5,5,5,5,5,5,5,5,5,5,5,5,5},
 								{5,5,5,12,5,5,5,5,5,5,5,5,5}};
 
-	void DrawMapchip(Graphics g)
+	@Override
+	public void Update(Graphics g)
 	{
+		System.out.println("マップ");
 		for(int y = 0; y < map.length ; y++)
 		for(int x = 0; x < map[y].length; x++)
 		{
+
 			//画像,描画場所始点終点,イメージの描画部分始点終点,this
 			g.drawImage(mapImages, (int)(x * chipSize.x * Main.MagniWidth), (int)(y * chipSize.y * Main.MagniHeight),
 					(int)((x * chipSize.x + chipSize.x) * Main.MagniWidth), (int)((y * chipSize.y + chipSize.x) * Main.MagniHeight),

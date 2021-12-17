@@ -48,7 +48,7 @@ public class Boss extends GameObject
 	}
 	AttackPattern pattern;
 
-	Boss(Vector2 pos, Vector2 size,String... img) {super(pos, size,"boss", img);}
+	Boss(Vector2 pos, Vector2 size,String... img) {super(pos, size,Tag.Boss, img);}
 
 	void MoveDraw(Graphics g,Player player)
 	{
@@ -82,6 +82,7 @@ public class Boss extends GameObject
 		t = -Math.abs(-t+4)+4;//往復アニメーション処理
 		DrawObject(g,t);
 
+		/*
 		//プレイヤーの弾が当たった処理
 		for(int i = 0; i < player.p_Bullet.size();)
 		{
@@ -310,6 +311,7 @@ public class Boss extends GameObject
 			tracking.get(i).MoveDraw(g,this,player);
 			i++;
 		}
+		*/
 	}
 
 	//初期化
@@ -317,9 +319,9 @@ public class Boss extends GameObject
 	{
 		postion = new Vector2(200,100);
 		hp = MaxHP;
-		e_Bullet.clear();
-		fireFlower.clear();
-		tracking.clear();
+		//e_Bullet.clear();
+		//fireFlower.clear();
+		//tracking.clear();
 		e_Bullet_Timer = 0;
 		atkChangeTimer = 0;
 		modeTimer = 0;
