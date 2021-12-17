@@ -9,32 +9,34 @@ public class Boss extends GameObject
 	ArrayList<Bullet> e_Bullet = new ArrayList<>();
 	ArrayList<FireFlower> fireFlower = new ArrayList<>();
 	ArrayList<Tracking> tracking = new ArrayList<>();
-	
+
 	final int e_Bullet_Cool = 64;//ランダム撃ちの頻度
 	int e_Bullet_Timer;//敵のランダム撃ちタイマー
-	
+
 	int putternTime;//パターン攻撃の攻撃頻度
 	int e_pBullet_Timer;//パターン攻撃タイマー
-	
+
 	final int MaxHP = 500;//最大体力
 	int hp;//体力
-	
+
 	int modeTimer;//ボスの状態タイマー
+	final int ModeChangeTime = 25000;
+
 	boolean invincible = true;//無敵かどうか
 	int atkChangeTimer;//攻撃種類変更タイマー
-	
+
 	float volDeg;//回転用
 	float volDeg2;//逆回転用
-	
+
 	int moveTimer;//動き関係タイマー
 	int moveTime = 4000;//動く(止まる)時間
 	boolean move = false;//動くか止まるか
 	Vector2 speed = new Vector2(Vector2.Zero);//スピード
-	
+
 	//アニメーションタイマー
 	final int ChangeTime = 100;
 	int anmTimer = 0;
-	
+
 	enum AttackPattern	//攻撃パターン
 	{
 		Closs,		//縦横
@@ -45,9 +47,9 @@ public class Boss extends GameObject
 		Tracking	//追尾
 	}
 	AttackPattern pattern;
-	
-	Boss(Vector2 pos, Vector2 size,String... img) {super(pos, size, img);}
-	
+
+	Boss(Vector2 pos, Vector2 size,String... img) {super(pos, size,"boss", img);}
+
 	void MoveDraw(Graphics g,Player player)
 	{
 		moveTimer+=Time.flameTime;
@@ -79,7 +81,7 @@ public class Boss extends GameObject
 		t = t % 8;
 		t = -Math.abs(-t+4)+4;//往復アニメーション処理
 		DrawObject(g,t);
-		
+
 		//プレイヤーの弾が当たった処理
 		for(int i = 0; i < player.p_Bullet.size();)
 		{
@@ -95,15 +97,15 @@ public class Boss extends GameObject
 			}
 			i++;//物を消すと移動処理されないので、消したときは足さずに次のループへ
 		}
-		
+
 		modeTimer += Time.flameTime;
 		if(invincible)
 		{
-			//TODO 変更時間を変数にしたほうが良い
-			if(modeTimer >= 25000) 
+			//TODO 変更時間を定数にしたほうが良い
+			if(modeTimer >=  ModeChangeTime)
 			{
 				invincible = !invincible;
-				modeTimer -= 25000;
+				modeTimer -= ModeChangeTime;
 			}
 			//花火時以外はランダム撃ちをする。
 			if(pattern != AttackPattern.FireFlower)
@@ -114,7 +116,7 @@ public class Boss extends GameObject
 					e_Bullet_Timer -= e_Bullet_Cool;
 					//TODO 画像情報を毎回取得しているため1度だけで良い
 					e_Bullet.add(new Bullet("image/enemy_bullet.png", new Vector2(postion.x, postion.y-10)));
-					e_Bullet.get(e_Bullet.size()-1).speed 
+					e_Bullet.get(e_Bullet.size()-1).speed
 						= new Vector2(Vector2.DegreeToVector((float) ((Math.random() * (360)))));
 					e_Bullet.get(e_Bullet.size()-1).speed.times(2);
 				}
@@ -172,9 +174,11 @@ public class Boss extends GameObject
 						break;
 					case FireFlower:
 						for(int i = -180;i < 180;i+=60)
+							//花火はBossクラスの子として扱い、拡散時は親子関係を外す
 							fireFlower.add(new FireFlower("image/enemy_bullet.png", new Vector2(firePos), new Vector2(Vector2.DegreeToVector(deg + i)),1));
 						break;
 					case Tracking:
+							//花火と同じく
 							tracking.add(new Tracking("image/enemy_bullet.png", new Vector2(firePos), new Vector2(Vector2.DegreeToVector(deg)),1));
 						break;
 				}
@@ -220,29 +224,29 @@ public class Boss extends GameObject
 		}
 		else //無敵じゃなければ
 		{
-			if(modeTimer >= 10000) 
+			if(modeTimer >= 10000)
 			{
 				invincible = !invincible;
 				modeTimer -= 10000;
 				atkChangeTimer = 0;
 			}
 		}
-		
+
 		//それぞれプレーヤーの当たり判定
 		for(int i = 0; i < e_Bullet.size();)
 		{
 			e_Bullet.get(i).movePostion(e_Bullet.get(i).speed);
-			if(e_Bullet.get(i).postion.y < 0 
+			if(e_Bullet.get(i).postion.y < 0
 			|| e_Bullet.get(i).postion.y > 500
-			|| e_Bullet.get(i).postion.x < 0 
-			|| e_Bullet.get(i).postion.x > 400) 
+			|| e_Bullet.get(i).postion.x < 0
+			|| e_Bullet.get(i).postion.x > 400)
 			{
 				e_Bullet.remove(i);
 				continue;
 			}
 			if(!player.invincible && Collider.EnterCollider(player.postion, new Vector2(e_Bullet.get(i).postion), 7))
 			{
-				SEManager.PlaySE(SEManager.SE.Damage);
+				SEPlayer.PlaySE(SEPlayer.SE.Damage);
 				player.invincible = true;
 				e_Bullet.remove(i);
 				player.hp--;
@@ -254,17 +258,17 @@ public class Boss extends GameObject
 		for(int i = 0; i < fireFlower.size();)
 		{
 			fireFlower.get(i).movePostion(fireFlower.get(i).speed);
-			if(fireFlower.get(i).postion.y < 0 
+			if(fireFlower.get(i).postion.y < 0
 			|| fireFlower.get(i).postion.y > 500
-			|| fireFlower.get(i).postion.x < 0 
-			|| fireFlower.get(i).postion.x > 400) 
+			|| fireFlower.get(i).postion.x < 0
+			|| fireFlower.get(i).postion.x > 400)
 			{
 				fireFlower.remove(i);
 				continue;
 			}
 			if(!player.invincible && Collider.EnterCollider(player.postion, new Vector2(fireFlower.get(i).postion), 7))
 			{
-				SEManager.PlaySE(SEManager.SE.Damage);
+				SEPlayer.PlaySE(SEPlayer.SE.Damage);
 				player.invincible = true;
 				fireFlower.remove(i);
 				player.hp--;
@@ -280,19 +284,19 @@ public class Boss extends GameObject
 		}
 		for(int i = 0; i < tracking.size();)
 		{
-			
+
 			tracking.get(i).movePostion(tracking.get(i).speed);
-			if(tracking.get(i).postion.y < 0 
+			if(tracking.get(i).postion.y < 0
 			|| tracking.get(i).postion.y > 500
-			|| tracking.get(i).postion.x < 0 
-			|| tracking.get(i).postion.x > 400) 
+			|| tracking.get(i).postion.x < 0
+			|| tracking.get(i).postion.x > 400)
 			{
 				tracking.remove(i);
 				continue;
 			}
 			if(!player.invincible && Collider.EnterCollider(player.postion, new Vector2(tracking.get(i).postion), 7))
 			{
-				SEManager.PlaySE(SEManager.SE.Damage);
+				SEPlayer.PlaySE(SEPlayer.SE.Damage);
 				player.invincible = true;
 				tracking.remove(i);
 				player.hp--;
@@ -307,7 +311,7 @@ public class Boss extends GameObject
 			i++;
 		}
 	}
-	
+
 	//初期化
 	void Init()
 	{
@@ -327,7 +331,11 @@ public class Boss extends GameObject
 		moveTime = 4000;
 		anmTimer = 0;
 	}
-	
+
+	public void Start()
+	{
+	}
+
 	//弾の追加(特殊弾から普通の弾に移行するときに使う)
 	void Add(Bullet bullet){ e_Bullet.add(bullet); }
 }

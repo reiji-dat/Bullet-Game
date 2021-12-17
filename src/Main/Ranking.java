@@ -46,10 +46,10 @@ public class Ranking {
 			{
 				if(descending && score[i-1] < score[i])
 				{
-						//入れ替える
-						score[i-1] = score[i-1] + score[i];
-						score[i] = score[i-1] - score[i];
-						score[i-1] = score[i-1] - score[i];
+					//入れ替える
+					score[i-1] = score[i-1] + score[i];
+					score[i] = score[i-1] - score[i];
+					score[i-1] = score[i-1] - score[i];
 				}
 				else if(score[i-1] > score[i])
 				{

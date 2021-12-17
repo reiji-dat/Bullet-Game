@@ -1,13 +1,14 @@
 package Main;
 
 //SEを再生するクラス
-public class SEManager
+public class SEPlayer
 {
-	public static SEManager Instance = new SEManager();
-	final String pt = "audio/";
-	private AudioManager sound[] = 
-			new AudioManager[]{new AudioManager(pt+"select.wav"),new AudioManager(pt+"attack.wav"),new AudioManager(pt+"damage.wav"),
-								new AudioManager(pt+"clear.wav"),new AudioManager(pt+"gameover.wav")};
+	public static SEPlayer Instance = new SEPlayer();
+	private final String f = "audio/";
+	private AudioManager sound[] =
+			new AudioManager[]{new AudioManager(f+"select.wav"),new AudioManager(f+"attack.wav"),new AudioManager(f+"damage.wav"),
+								new AudioManager(f+"clear.wav"),new AudioManager(f+"gameover.wav")};
+
 	enum SE
 	{
 		Select,
@@ -16,7 +17,7 @@ public class SEManager
 		Clear,
 		Gameover
 	}
-	
+
 	public static void PlaySE(SE se)
 	{
 		int n = 0;

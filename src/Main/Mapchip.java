@@ -16,14 +16,16 @@ public class Mapchip extends JPanel{
 	Point split;//縦横それぞれの枚数
 	int chips;//チップ全体の数
 	Point[] chipPoint;//チップごとのの始点
+
 	//初期化
 	Mapchip()
 	{
+		//super(Vector2.Zero);
 		ImageIcon icon = new ImageIcon(mapImages);
 		size = new Point(icon.getIconWidth(), icon.getIconHeight());
 		split = new Point(size.x / chipSize.x, size.y / chipSize.y);
 		chips = split.x * split.y;
-		
+
 		chipPoint = new Point[chips];
 		int xy = 0;
 		for(int y = 0; y < size.y; y+=chipSize.y)
@@ -35,10 +37,12 @@ public class Mapchip extends JPanel{
 				xy++;
 			}
 		}
-		
+
 	}
-	//初期化で設定すればMain側で自由度の高いマップが作れる
-	int[][] map = new int[][] {
+
+	//マップ
+	//128以上は使わないためbyte型でメモリ削減
+	final byte[][] map = new byte[][] {
 								{5,5,5,5,5,5,5,5,5,5,5,5,5},
 								{5,5,5,5,5,5,5,5,5,5,12,5,5},
 								{5,5,5,5,5,5,5,5,5,5,5,5,5},

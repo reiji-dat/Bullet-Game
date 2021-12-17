@@ -5,7 +5,8 @@ class Collider {
 	{
 		v1size*=v1size;
 		v2.minus(v1);
-		v2.times(v2);
-		return v1size >= v2.x+v2.y ? true : false;
+		v2.x *= v2.x;
+		v2.y *= v2.y;
+		return v1size >= v2.x+v2.y;
 	}
 }

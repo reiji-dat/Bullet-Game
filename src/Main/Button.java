@@ -40,7 +40,8 @@ public class Button extends JPanel{
 			{
 				Vector2 pos = new Vector2(MouseInput.pressedPostion);
 				Vector2 bpos = new Vector2(postion);
-				bpos.times(new Vector2(Main.MagniWidth,Main.MagniHeight));
+				bpos.x *= Main.MagniWidth;
+				bpos.y *= Main.MagniHeight;
 				if(bpos.x<= pos.x && bpos.x + size.x*Main.MagniWidth >= pos.x
 				&& bpos.y<= pos.y && bpos.y + size.y*Main.MagniHeight>= pos.y)
 					pressed = true;

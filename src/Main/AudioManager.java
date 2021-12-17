@@ -15,7 +15,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 public class AudioManager {
 	Clip clip;
 	float volume = 1.0f;
-	
+
 	AudioManager(String name)
 	{
 		URL url = getClass().getResource(name);
@@ -59,35 +59,35 @@ public class AudioManager {
 		}
 		return null;
 	}
-	
+
 	//これらはいらないかもしれないが分かりやすいため設定した
 	void Play()
 	{
 		clip.start();
 	}
-	
+
 	void PlayLoop()
 	{
 		clip.loop(Clip.LOOP_CONTINUOUSLY);
 	}
-	
+
 	void PlayLoop(int loop)
 	{
 		clip.loop(loop);
 	}
-	
+
 	void Stop()
 	{
 		clip.stop();
 	}
-	
+
 	void Reset()
 	{
 		clip.stop();
 		clip.flush();
 		clip.setFramePosition(0);
 	}
-	
+
 	void setVolume(float vol)
 	{
 		volume = vol;//この変数は基本いらないが現在の音量を画面上に表示するときに役に立つ？
