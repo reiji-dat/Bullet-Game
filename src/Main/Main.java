@@ -105,7 +105,9 @@ class GameScene extends BaseScene
 
 		//player.MoveDraw(g);	//プレイヤー表示
 		boss.MoveDraw(g,player);	//ボス表示
-		frame.DrawObject(g);		//フレーム表示
+
+		//特殊なので一旦消す
+		//frame.DrawObject(g);		//フレーム表示
 
 
 
@@ -140,6 +142,17 @@ class GameScene extends BaseScene
 	public void Start()
 	{
 		BGMPlayer.PlayBGM(BGMPlayer.BGM.Buttle);
+
+		/*
+		map = ObjectManager.Instantiate(new Mapchip());
+		Mapchip map = new Mapchip();//マップ生成
+		//フレーム
+		GameObject frame = new GameObject("image/frame.png",new Vector2(400,250));
+		//プレイヤー
+		Player player = new Player(Vector2.Zero,"image/PlayerFly001.png","image/PlayerFly002.png","image/PlayerFly003.png");
+		//ボス
+		Boss boss = new Boss(Vector2.Zero,new Vector2(1.5f,1.5f),"image/dragon1.png","image/dragon2.png","image/dragon3.png","image/dragon4.png","image/dragon5.png");
+		*/
 		boss.Init();
 		mainTimer = 0;
 	}

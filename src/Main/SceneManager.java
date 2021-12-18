@@ -73,7 +73,7 @@ class GameWindow extends JFrame implements Runnable{
 
 	public void ChangeScene(BaseScene panel) {
 		//ContentPaneにはめ込まれたパネルを削除
-		if(panel != null) panel.OnDestroy();
+		if(currentPanel != null) currentPanel.OnDestroy();
 		getContentPane().removeAll();
 
 		super.add(panel);//パネルの追加
@@ -122,6 +122,7 @@ class BaseScene extends JPanel
 
 	public void OnDestroy()
 	{
-		ObjectManager.AllDestroyGameObjects();
+		System.out.println("全てを削除する");
+		//ObjectManager.AllDestroyGameObjects();
 	}
 }

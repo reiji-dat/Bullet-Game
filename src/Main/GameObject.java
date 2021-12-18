@@ -84,8 +84,8 @@ public class GameObject extends JPanel{
 		}
 
 		tag = _tag;
-
 		ObjectManager.Instantiate(this);
+		System.out.println(tag.toString());
 	}
 
 	void DrawObject(Graphics g)

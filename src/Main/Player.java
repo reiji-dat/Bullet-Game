@@ -30,7 +30,9 @@ public class Player extends GameObject{
 	@Override
 	public void Update(Graphics g)
 	{
-		//super.Update(g);
+		Object className = new Object(){}.getClass();
+        System.out.println(className);
+
 		if(invincible)//無敵時間は点滅する
 		{
 			invTimer += Time.flameTime;

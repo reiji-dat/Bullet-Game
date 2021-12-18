@@ -4,12 +4,14 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class ObjectManager
 {
 	public static List<GameObject> objects = new ArrayList<GameObject>();
 
 	public static void UpdateObjects(Graphics g)
 	{
+		//System.out.println("オブジェクトの数" + objects.size());
 		for(int i = 0; i < objects.size(); i++)
 		{
 			objects.get(i).Update(g);
@@ -32,6 +34,7 @@ public class ObjectManager
 		System.out.println("オブジェクト生成");
 		objects.add(obj);
 		StartObject(obj);
+		System.out.println("オブジェクトの数" + objects.size());
 		return obj;
 	}
 

@@ -31,7 +31,6 @@ public class Mapchip extends GameObject{
 		{
 			for(int x = 0; x < size.x; x+=chipSize.x)
 			{
-				System.out.println(xy);
 				chipPoint[xy] = new Point(x,y);
 				xy++;
 			}
@@ -58,11 +57,8 @@ public class Mapchip extends GameObject{
 								{5,5,5,5,5,5,5,5,5,5,5,5,5},
 								{5,5,5,5,5,5,5,5,5,5,5,5,5},
 								{5,5,5,12,5,5,5,5,5,5,5,5,5}};
-
-	@Override
 	public void Update(Graphics g)
 	{
-		System.out.println("マップ");
 		for(int y = 0; y < map.length ; y++)
 		for(int x = 0; x < map[y].length; x++)
 		{
