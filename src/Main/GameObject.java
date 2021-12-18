@@ -14,7 +14,8 @@ public class GameObject extends JPanel{
 		None,
 		Player,
 		Boss,
-		Bullet,
+		PlayerBullet,
+		BossBullet,
 		Map
 	}
 
@@ -46,12 +47,12 @@ public class GameObject extends JPanel{
 
 	GameObject(String img, Vector2 v, Tag _tag)
 	{
-		Init(v, Vector2.One,Tag.None, img);
+		Init(v, Vector2.One,_tag, img);
 	}
 
 	GameObject(String img, Vector2 v, Vector2 _size, Tag _tag)
 	{
-		Init(v, _size, Tag.None, img);
+		Init(v, _size, _tag, img);
 	}
 
 	GameObject(Vector2 v, Tag _tag, String... img)
@@ -84,7 +85,7 @@ public class GameObject extends JPanel{
 		}
 
 		tag = _tag;
-		ObjectManager.Instantiate(this);
+		//ObjectManager.Instantiate(this);
 		System.out.println(tag.toString());
 	}
 
@@ -106,7 +107,7 @@ public class GameObject extends JPanel{
 	}
 
 	//指定した数値分移動します
-	void movePostion(Vector2 v)
+	void MovePostion(Vector2 v)
 	{
 		postion.plus(v);
 	}
@@ -123,6 +124,6 @@ public class GameObject extends JPanel{
 
 	public void OnDestroy()
 	{
-
+		System.out.println(tag + "を削除");
 	}
 }

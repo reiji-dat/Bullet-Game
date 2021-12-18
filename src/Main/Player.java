@@ -2,10 +2,8 @@ package Main;
 
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 
 public class Player extends GameObject{
-	ArrayList<GameObject> p_Bullet = new ArrayList<>();
 	final float Speed = 3;//プレイヤーの移動速度
 	final float BulletSpeed = 4;//弾の速度
 	final int MaxHP = 5;//最大体力
@@ -30,9 +28,6 @@ public class Player extends GameObject{
 	@Override
 	public void Update(Graphics g)
 	{
-		Object className = new Object(){}.getClass();
-        System.out.println(className);
-
 		if(invincible)//無敵時間は点滅する
 		{
 			invTimer += Time.flameTime;
@@ -62,7 +57,7 @@ public class Player extends GameObject{
 		t = -Math.abs(-t+2)+2;//往復アニメーション処理
 		DrawObject(g,t);
 
-		/*
+
 		//弾
 		if(bulletTimer < 500) bulletTimer += Time.flameTime;
 		else if(mp < MaxMP)
@@ -75,22 +70,10 @@ public class Player extends GameObject{
 		{
 			SEPlayer.PlaySE(SEPlayer.SE.Attack);
 			mp--;
-			p_Bullet.add(new GameObject("image/player_bullet.png",new Vector2(postion.x,postion.y-10)));
-			p_Bullet.add(new GameObject("image/player_bullet.png",new Vector2(postion.x+20,postion.y+5)));
-			p_Bullet.add(new GameObject("image/player_bullet.png",new Vector2(postion.x-20,postion.y+5)));
+			ObjectManager.Instantiate(new Bullet("image/player_bullet.png",new Vector2(postion.x,postion.y-10), new Vector2(0,-5), Tag.PlayerBullet));
+			ObjectManager.Instantiate(new Bullet("image/player_bullet.png",new Vector2(postion.x+20,postion.y+5), new Vector2(0,-5), Tag.PlayerBullet));
+			ObjectManager.Instantiate(new Bullet("image/player_bullet.png",new Vector2(postion.x-20,postion.y+5), new Vector2(0,-5), Tag.PlayerBullet));
 		}
-		for(int i = 0; i < p_Bullet.size();)
-		{
-			p_Bullet.get(i).postion.y-=BulletSpeed;
-			if(p_Bullet.get(i).postion.y < 0 || p_Bullet.get(i).postion.x < 0 || p_Bullet.get(i).postion.x > 400)
-			{
-				p_Bullet.remove(i);
-				continue;
-			}
-			p_Bullet.get(i).DrawObject(g);
-			i++;//消すとずれるので、消したときは足さずに次のループへ
-		}
-		*/
 	}
 
 	//初期化

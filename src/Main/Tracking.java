@@ -4,15 +4,16 @@ import java.awt.Graphics;
 
 public class Tracking extends Bullet{
 	boolean nearPlayer = false;
-	float velocity;
+	float velocity2;
 	Tracking(String img, Vector2 pos, Vector2 speed, float vel) {
 		super(img, pos, speed);
-		velocity = vel;
-		this.speed.times(vel);
+		velocity2 = vel;
+		this.velocity.times(vel);
 	}
 
 	void MoveDraw(Graphics g, Boss person, Player player)
 	{
+		/*
 		//プレイヤーが近くなったらまっすぐ飛ぶようにする
 		if (Collider.EnterCollider(player.postion, new Vector2(postion),50))nearPlayer=true;
 		if(!nearPlayer)//プレーヤーとの向きを調べ追尾する。
@@ -28,5 +29,6 @@ public class Tracking extends Bullet{
 			speed.times(velocity);
 			person.Add(new Bullet("image/enemy_bullet.png", new Vector2(postion),speed));
 		}
+		*/
 	}
 }

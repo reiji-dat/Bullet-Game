@@ -123,6 +123,6 @@ class BaseScene extends JPanel
 	public void OnDestroy()
 	{
 		System.out.println("全てを削除する");
-		//ObjectManager.AllDestroyGameObjects();
+		ObjectManager.AllDestroyGameObjects();
 	}
 }

@@ -1,14 +1,13 @@
 package Main;
 
 import java.awt.Graphics;
-import java.util.ArrayList;
 
 public class Boss extends GameObject
 {
 	//弾
-	ArrayList<Bullet> e_Bullet = new ArrayList<>();
-	ArrayList<FireFlower> fireFlower = new ArrayList<>();
-	ArrayList<Tracking> tracking = new ArrayList<>();
+	//ArrayList<Bullet> e_Bullet = new ArrayList<>();
+	//ArrayList<FireFlower> fireFlower = new ArrayList<>();
+	//ArrayList<Tracking> tracking = new ArrayList<>();
 
 	final int e_Bullet_Cool = 64;//ランダム撃ちの頻度
 	int e_Bullet_Timer;//敵のランダム撃ちタイマー
@@ -50,7 +49,7 @@ public class Boss extends GameObject
 
 	Boss(Vector2 pos, Vector2 size,String... img) {super(pos, size,Tag.Boss, img);}
 
-	void MoveDraw(Graphics g,Player player)
+	public void Update(Graphics g)
 	{
 		moveTimer+=Time.flameTime;
 		if(moveTimer >= moveTime)//動きを変える時間を超えたら
@@ -75,12 +74,176 @@ public class Boss extends GameObject
 			speed.times(-1);
 			//movePostion(speed);//動く処理を重複させてハマるのを防ぐ
 		}
-		movePostion(speed);
+		MovePostion(speed);
 		anmTimer+=Time.flameTime;
 		int t = anmTimer / ChangeTime;
 		t = t % 8;
 		t = -Math.abs(-t+4)+4;//往復アニメーション処理
 		DrawObject(g,t);
+
+		modeTimer += Time.flameTime;
+		if(invincible)
+		{
+			//TODO 変更時間を定数にしたほうが良い
+			if(modeTimer >=  ModeChangeTime)
+			{
+				invincible = !invincible;
+				modeTimer -= ModeChangeTime;
+			}
+			//花火時以外はランダム撃ちをする。
+			if(pattern != AttackPattern.FireFlower)
+			{
+				e_Bullet_Timer += Time.flameTime;
+				if(e_Bullet_Timer >= e_Bullet_Cool)
+				{
+					e_Bullet_Timer -= e_Bullet_Cool;
+					//TODO 画像情報を毎回取得しているため1度だけで良い
+					ObjectManager.Instantiate(
+							new Bullet(
+									"image/enemy_bullet.png",
+									new Vector2(postion.x, postion.y-10),
+									new Vector2(Vector2.DegreeToVector((float) (Math.random() * 360))),
+									Tag.BossBullet));
+				}
+			}
+			//パターン攻撃
+			e_pBullet_Timer += Time.flameTime;
+			if(e_pBullet_Timer >= putternTime)
+			{
+				Vector2 firePos = new Vector2(postion.x, postion.y-10);
+				e_pBullet_Timer -= putternTime;
+
+				//TODO 処理に影響は出るのか?
+				GameObject player = ObjectManager.FindObjectsTag(Tag.Player)[0];
+				float deg = Vector2.Angle(new Vector2(postion.x, postion.y-10),new Vector2(player.postion));
+				switch(pattern)//パターンごとの弾を撃つ処理
+				{
+					case Closs:
+						for(int i = 100; i < 400;i+=100)
+						{
+							ObjectManager.Instantiate(
+									new Bullet(
+											"image/enemy_bullet.png",
+											new Vector2(i,0),
+											new Vector2(0,3),
+											Tag.BossBullet));
+						}
+						for(int i = 100; i < 500;i+=100)
+						{
+							ObjectManager.Instantiate(
+									new Bullet(
+											"image/enemy_bullet.png",
+											new Vector2(0,i),
+											new Vector2(3,0),
+											Tag.BossBullet));
+						}
+						break;
+					case Pick:
+						for(int i = -40;i <= 40;i+=20)
+						{
+							Bullet b = (Bullet)ObjectManager.Instantiate(
+									new Bullet(
+											"image/enemy_bullet.png",
+											new Vector2(firePos),
+											new Vector2(Vector2.DegreeToVector(deg + i)),
+											Tag.BossBullet));
+							b.velocity.times(3);
+						}
+						break;
+					case Voluted:
+						for(int i = -144;i <= 144;i+=72)
+						{
+							Bullet b = (Bullet)ObjectManager.Instantiate(
+									new Bullet(
+											"image/enemy_bullet.png",
+											new Vector2(firePos),
+											new Vector2(Vector2.DegreeToVector(volDeg + i)),
+											Tag.BossBullet));
+							b.velocity.times(3);
+						}
+						volDeg+=10;
+						break;
+					case Voluted2:
+						for(int i = -144;i <= 144;i+=72)
+						{
+							Bullet b = (Bullet)ObjectManager.Instantiate(
+									new Bullet(
+											"image/enemy_bullet.png",
+											new Vector2(firePos),
+											new Vector2(Vector2.DegreeToVector(volDeg + i)),
+											Tag.BossBullet));
+							b.velocity.times(3);
+
+							b = (Bullet)ObjectManager.Instantiate(
+									new Bullet(
+											"image/enemy_bullet.png",
+											new Vector2(firePos),
+											new Vector2(Vector2.DegreeToVector(volDeg2 + i)),
+											Tag.BossBullet));
+							b.velocity.times(3);
+						}
+						volDeg+=10;
+						volDeg2-=10;
+						break;
+					case FireFlower:
+						for(int i = -180;i < 180;i+=60);
+							//花火はBossクラスの子として扱い、拡散時は親子関係を外す
+							//fireFlower.add(new FireFlower("image/enemy_bullet.png", new Vector2(firePos), new Vector2(Vector2.DegreeToVector(deg + i)),1));
+						break;
+					case Tracking:
+							//花火と同じく
+							//tracking.add(new Tracking("image/enemy_bullet.png", new Vector2(firePos), new Vector2(Vector2.DegreeToVector(deg)),1));
+						break;
+				}
+			}
+			atkChangeTimer += Time.flameTime;
+			if(atkChangeTimer >= 5000)//パターン変更処理
+			{
+				//攻撃パターン抽選
+				int next = (int)(Math.random() * 6);
+				switch(next)//intからenumにすることが出来なかっためswitch文で分岐させた
+				{
+					case 0:
+						pattern = AttackPattern.Closs;
+						putternTime = 500;//攻撃頻度をそれぞれ変更
+						break;
+					case 1:
+						pattern = AttackPattern.Pick;
+						putternTime = 333;
+						break;
+					case 2:
+						pattern = AttackPattern.Voluted;
+						putternTime = 150;
+						volDeg = 0;
+						break;
+					case 3:
+						pattern = AttackPattern.Voluted2;
+						putternTime = 150;
+						volDeg = 0;
+						volDeg2 = 180;
+						break;
+					case 4:
+						pattern = AttackPattern.FireFlower;
+						putternTime = 910;
+						break;
+					case 5:
+						pattern = AttackPattern.Tracking;
+						putternTime = 500;
+						break;
+				}
+				atkChangeTimer -= 5000;
+				e_pBullet_Timer = 0;
+			}
+		}
+		else //無敵じゃなければ
+		{
+			if(modeTimer >= 10000)
+			{
+				invincible = !invincible;
+				modeTimer -= 10000;
+				atkChangeTimer = 0;
+			}
+		}
 
 		/*
 		//プレイヤーの弾が当たった処理
@@ -314,8 +477,7 @@ public class Boss extends GameObject
 		*/
 	}
 
-	//初期化
-	void Init()
+	public void Start()
 	{
 		postion = new Vector2(200,100);
 		hp = MaxHP;
@@ -333,11 +495,4 @@ public class Boss extends GameObject
 		moveTime = 4000;
 		anmTimer = 0;
 	}
-
-	public void Start()
-	{
-	}
-
-	//弾の追加(特殊弾から普通の弾に移行するときに使う)
-	void Add(Bullet bullet){ e_Bullet.add(bullet); }
 }

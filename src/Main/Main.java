@@ -84,13 +84,13 @@ class TitleScene extends BaseScene
 
 class GameScene extends BaseScene
 {
-	Mapchip map = new Mapchip();//マップ生成
+	Mapchip map;//マップ生成
 	//フレーム
-	GameObject frame = new GameObject("image/frame.png",new Vector2(400,250));
+	GameObject frame;
 	//プレイヤー
-	Player player = new Player(Vector2.Zero,"image/PlayerFly001.png","image/PlayerFly002.png","image/PlayerFly003.png");
+	Player player;
 	//ボス
-	Boss boss = new Boss(Vector2.Zero,new Vector2(1.5f,1.5f),"image/dragon1.png","image/dragon2.png","image/dragon3.png","image/dragon4.png","image/dragon5.png");
+	Boss boss;
 
 	public static int mainTimer;//UIのタイマー
 
@@ -100,16 +100,10 @@ class GameScene extends BaseScene
 		super.Update(g);
 		Font font;
 
-		//map.DrawMapchip(g);//マップチップ表示
 		mainTimer += Time.flameTime;
-
-		//player.MoveDraw(g);	//プレイヤー表示
-		boss.MoveDraw(g,player);	//ボス表示
 
 		//特殊なので一旦消す
 		//frame.DrawObject(g);		//フレーム表示
-
-
 
 		font = new Font("ＭＳ Ｐゴシック",Font.PLAIN,42);
 		g.setFont(font);
@@ -139,21 +133,23 @@ class GameScene extends BaseScene
 		//デバッグ用
 		if(KeyInput.pressedKey[KeyEvent.VK_P]) SceneManager.scene.ChangeScene(new ClearScene());
 	}
+
 	public void Start()
 	{
 		BGMPlayer.PlayBGM(BGMPlayer.BGM.Buttle);
 
+		//マップ生成
+		map = (Mapchip)ObjectManager.Instantiate(new Mapchip());
+
+		player = (Player)ObjectManager.Instantiate(
+				new Player(Vector2.Zero,"image/PlayerFly001.png","image/PlayerFly002.png","image/PlayerFly003.png"));
+
+		boss = (Boss)ObjectManager.Instantiate(
+				new Boss(Vector2.Zero,new Vector2(1.5f,1.5f),"image/dragon1.png","image/dragon2.png","image/dragon3.png","image/dragon4.png","image/dragon5.png"));
 		/*
-		map = ObjectManager.Instantiate(new Mapchip());
-		Mapchip map = new Mapchip();//マップ生成
 		//フレーム
 		GameObject frame = new GameObject("image/frame.png",new Vector2(400,250));
-		//プレイヤー
-		Player player = new Player(Vector2.Zero,"image/PlayerFly001.png","image/PlayerFly002.png","image/PlayerFly003.png");
-		//ボス
-		Boss boss = new Boss(Vector2.Zero,new Vector2(1.5f,1.5f),"image/dragon1.png","image/dragon2.png","image/dragon3.png","image/dragon4.png","image/dragon5.png");
 		*/
-		boss.Init();
 		mainTimer = 0;
 	}
 

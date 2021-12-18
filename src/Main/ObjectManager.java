@@ -4,6 +4,20 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
+class CastClass<T>
+{
+	public T DownCast(GameObject obj)
+	{
+		try {
+			return (T)obj;
+		}catch(ClassCastException e)
+		{
+			System.out.println("キャストが失敗しました！");
+			return null;
+		}
+
+	}
+}
 
 public class ObjectManager
 {
@@ -17,7 +31,6 @@ public class ObjectManager
 			objects.get(i).Update(g);
 		}
 	}
-
 
 	public static void StartObject(GameObject obj)
 	{
@@ -38,12 +51,12 @@ public class ObjectManager
 		return obj;
 	}
 
-	public static GameObject[] FindObjectsTag(String tag)
+	public static GameObject[] FindObjectsTag(GameObject.Tag tag)
 	{
 		List<GameObject> hits = new ArrayList<GameObject>();
 		for(int i = 0; i < objects.size(); i++)
 		{
-			hits.add(objects.get(i));
+			if(objects.get(i).tag == tag) hits.add(objects.get(i));
 		}
 		return hits.toArray(new GameObject[0]);
 	}
