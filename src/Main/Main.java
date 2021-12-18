@@ -84,7 +84,6 @@ class TitleScene extends BaseScene
 
 class GameScene extends BaseScene
 {
-	Mapchip map;//マップ生成
 	//フレーム
 	GameObject frame;
 	//プレイヤー
@@ -125,11 +124,9 @@ class GameScene extends BaseScene
 		Text.drawString(g, "Dragon", 433,210);
 
 		//ボスが1体だからこの処理ができる。複数いる場合は別の方法をしなければいけない。
-		//TODO 適切なシーンに変更
 		if(boss.hp <= 0) SceneManager.scene.ChangeScene(new ClearScene());
 		if(player.hp <= 0) SceneManager.scene.ChangeScene(new GameOverScene());
 
-		//ObjectManager.UpdateObjects(g);
 		//デバッグ用
 		if(KeyInput.pressedKey[KeyEvent.VK_P]) SceneManager.scene.ChangeScene(new ClearScene());
 	}
@@ -139,17 +136,16 @@ class GameScene extends BaseScene
 		BGMPlayer.PlayBGM(BGMPlayer.BGM.Buttle);
 
 		//マップ生成
-		map = (Mapchip)ObjectManager.Instantiate(new Mapchip());
+		ObjectManager.Instantiate(ObjectManager.Instantiate(new Mapchip()));
 
 		player = (Player)ObjectManager.Instantiate(
 				new Player(Vector2.Zero,"image/PlayerFly001.png","image/PlayerFly002.png","image/PlayerFly003.png"));
 
 		boss = (Boss)ObjectManager.Instantiate(
 				new Boss(Vector2.Zero,new Vector2(1.5f,1.5f),"image/dragon1.png","image/dragon2.png","image/dragon3.png","image/dragon4.png","image/dragon5.png"));
-		/*
-		//フレーム
-		GameObject frame = new GameObject("image/frame.png",new Vector2(400,250));
-		*/
+
+		ObjectManager.Instantiate(new GameObject("image/frame.png",new Vector2(400,250)));
+
 		mainTimer = 0;
 	}
 
@@ -194,7 +190,6 @@ class ClearScene extends BaseScene
 			SEPlayer.PlaySE(SEPlayer.SE.Select);
 			SceneManager.scene.ChangeScene(new RankingScene());
 		}
-
 	}
 	public void Start()
 	{

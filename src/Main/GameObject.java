@@ -20,6 +20,7 @@ public class GameObject extends JPanel{
 	}
 
 	public Tag tag;
+	public int imageIndex = 0;
 	Vector2 postion;
 	Vector2 size;
 	Image[] image;
@@ -91,19 +92,20 @@ public class GameObject extends JPanel{
 
 	void DrawObject(Graphics g)
 	{
-		if(show)
-			g.drawImage
-			(image[0], (int)((postion.x - size.x / 2) * Main.MagniWidth), (int)((postion.y - size.y / 2) * Main.MagniHeight),
-					(int)(size.x * Main.MagniWidth), (int)(size.y * Main.MagniHeight), this);
-	}
-
-	void DrawObject(Graphics g, int num)
-	{
-		num = num > image.length - 1 ? 0 : num;
+		int num = clamp(imageIndex, 0, image.length - 1);
 		if(show)
 			g.drawImage
 			(image[num], (int)((postion.x - size.x / 2) * Main.MagniWidth), (int)((postion.y - size.y / 2) * Main.MagniHeight),
 					(int)(size.x * Main.MagniWidth), (int)(size.y * Main.MagniHeight), this);
+	}
+
+	int clamp(int value, int min, int max) {
+	    if (value < min) {
+	        return min;
+	    } else if (value > max) {
+	        return max;
+	    }
+	    return value;
 	}
 
 	//指定した数値分移動します
@@ -114,7 +116,7 @@ public class GameObject extends JPanel{
 
 	public void Update(Graphics g)
 	{
-
+		DrawObject(g);
 	}
 
 	public void Start()

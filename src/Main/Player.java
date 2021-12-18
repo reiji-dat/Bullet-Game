@@ -28,6 +28,18 @@ public class Player extends GameObject{
 	@Override
 	public void Update(Graphics g)
 	{
+		Invincible();
+		Movement();
+		Animation();
+		MP();
+		ShotBullet();
+		HitBullet();
+
+		super.Update(g);
+	}
+
+	private void Invincible()
+	{
 		if(invincible)//無敵時間は点滅する
 		{
 			invTimer += Time.flameTime;
@@ -39,6 +51,10 @@ public class Player extends GameObject{
 				invTimer = 0;
 			}
 		}
+	}
+
+	private void Movement()
+	{
 		//移動
 		if(KeyInput.inputKey[KeyEvent.VK_W]) postion.y -= Speed;
 		if(KeyInput.inputKey[KeyEvent.VK_A]) postion.x -= Speed;
@@ -50,14 +66,19 @@ public class Player extends GameObject{
 		postion.x = postion.x > 400 ? 400 : postion.x;
 		postion.y = postion.y < 0 ? 0 : postion.y;
 		postion.y = postion.y > 500 ? 500 : postion.y;
+	}
 
+	private void Animation()
+	{
 		anmTimer += Time.flameTime;
 		int t = anmTimer / ChangeTime;
 		t = t % 4;//定数の方が尚良い
 		t = -Math.abs(-t+2)+2;//往復アニメーション処理
-		DrawObject(g,t);
+		imageIndex = t;
+	}
 
-
+	private void MP()
+	{
 		//弾
 		if(bulletTimer < 500) bulletTimer += Time.flameTime;
 		else if(mp < MaxMP)
@@ -65,7 +86,10 @@ public class Player extends GameObject{
 			bulletTimer -= 500;
 			mp++;
 		}
+	}
 
+	private void ShotBullet()
+	{
 		if(KeyInput.pressedKey[KeyEvent.VK_SPACE] && mp > 0)
 		{
 			SEPlayer.PlaySE(SEPlayer.SE.Attack);
@@ -76,6 +100,22 @@ public class Player extends GameObject{
 		}
 	}
 
+	private void HitBullet()
+	{
+		GameObject[] objs = ObjectManager.FindObjectsTag(Tag.BossBullet);
+		for(int i = 0; i < objs.length; i++)
+		{
+			if(!invincible && Collider.EnterCollider(postion, new Vector2(objs[i].postion), 7))
+			{
+				SEPlayer.PlaySE(SEPlayer.SE.Damage);
+				invincible = true;
+				ObjectManager.Destroy(objs[i]);
+				hp--;
+				break;
+			}
+		}
+	}
+
 	//初期化
 	@Override
 	public void Start()
@@ -83,7 +123,6 @@ public class Player extends GameObject{
 		bulletTimer = 0;
 		hp = MaxHP;
 		mp = MaxMP;
-		//p_Bullet.clear();
 		postion = new Vector2(200,400);
 		invincible = false;
 		invTimer = 0;
