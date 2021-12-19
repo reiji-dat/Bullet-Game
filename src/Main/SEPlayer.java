@@ -4,10 +4,10 @@ package Main;
 public class SEPlayer
 {
 	public static SEPlayer Instance = new SEPlayer();
-	private final String f = "audio/";
 	private AudioManager sound[] =
-			new AudioManager[]{new AudioManager(f+"select.wav"),new AudioManager(f+"attack.wav"),new AudioManager(f+"damage.wav"),
-								new AudioManager(f+"clear.wav"),new AudioManager(f+"gameover.wav")};
+			new AudioManager[]{new AudioManager("audio/select.wav"),new AudioManager("audio/attack.wav"),new AudioManager("audio/damage.wav"),
+								new AudioManager("audio/clear.wav"),new AudioManager("audio/gameover.wav"),new AudioManager("audio/BossDamage.wav")
+								,new AudioManager("audio/Weakness.wav")};
 
 	enum SE
 	{
@@ -15,7 +15,9 @@ public class SEPlayer
 		Attack,
 		Damage,
 		Clear,
-		Gameover
+		Gameover,
+		BossDamage,
+		Weakness
 	}
 
 	public static void PlaySE(SE se)
@@ -37,6 +39,12 @@ public class SEPlayer
 				break;
 			case Gameover:
 				n = 4;
+				break;
+			case BossDamage:
+				n = 5;
+				break;
+			case Weakness:
+				n = 6;
 				break;
 		}
 		Instance.sound[n].Reset();

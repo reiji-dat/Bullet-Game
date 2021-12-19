@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 
 public class GameObject extends JPanel{
 
-	enum Tag
+	public enum Tag
 	{
 		None,
 		Player,
@@ -21,10 +21,10 @@ public class GameObject extends JPanel{
 
 	public Tag tag;
 	public int imageIndex = 0;
-	Vector2 postion;
-	Vector2 size;
-	Image[] image;
-	boolean show = true;
+	public Vector2 postion;
+	public Vector2 size;
+	public Image[] image;
+	public boolean show = true;
 
 	GameObject(String img, Vector2 v)
 	{
@@ -90,7 +90,7 @@ public class GameObject extends JPanel{
 		System.out.println(tag.toString());
 	}
 
-	void DrawObject(Graphics g)
+	public void DrawObject(Graphics g)
 	{
 		int num = clamp(imageIndex, 0, image.length - 1);
 		if(show)
@@ -99,7 +99,7 @@ public class GameObject extends JPanel{
 					(int)(size.x * Main.MagniWidth), (int)(size.y * Main.MagniHeight), this);
 	}
 
-	int clamp(int value, int min, int max) {
+	private int clamp(int value, int min, int max) {
 	    if (value < min) {
 	        return min;
 	    } else if (value > max) {
@@ -109,7 +109,7 @@ public class GameObject extends JPanel{
 	}
 
 	//指定した数値分移動します
-	void MovePostion(Vector2 v)
+	public void MovePostion(Vector2 v)
 	{
 		postion.plus(v);
 	}

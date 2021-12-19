@@ -3,6 +3,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 
+import Main.SEPlayer.SE;
+
 
 //var1.1 コーディングのスマート化
 
@@ -55,14 +57,14 @@ class TitleScene extends BaseScene
 		btn.DrawButton(g);
 		if(btn.pressed)
 		{
-			SEPlayer.PlaySE(SEPlayer.SE.Select);
+			SEPlayer.PlaySE(SE.Select);
 			SceneManager.scene.ChangeScene(new GameScene());
 		}
 
 		rnk.DrawButton(g);
 		if(rnk.pressed)
 		{
-			SEPlayer.PlaySE(SEPlayer.SE.Select);
+			SEPlayer.PlaySE(SE.Select);
 			SceneManager.scene.ChangeScene(new RankingScene());
 		}
 
