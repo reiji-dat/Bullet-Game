@@ -32,7 +32,7 @@ public class FireFlower extends Bullet{
 	{
 		if(currentDist <= DiffDistance)//拡散前
 		{
-			currentDist+=speed;
+			currentDist+=speed*Time.GetDeltaTime();
 		}
 		else//拡散後
 		{

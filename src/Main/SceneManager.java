@@ -3,6 +3,7 @@ package Main;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -37,9 +38,9 @@ class GameWindow extends JFrame implements Runnable{
 
 	private Thread th = null;
 
-	private final int fps = 60;
+	private final int FPS = 60;
 	//正確にしたいためdouble型
-	private final double sleepAddTime = 1000.0 / fps;
+	private final double SleepAddTime = 1000.0 / FPS;
 
 	public GameWindow(String title, int width, int height)
 	{
@@ -68,7 +69,7 @@ class GameWindow extends JFrame implements Runnable{
 
 
 	public void run(){
-		double nextTime = System.currentTimeMillis() + sleepAddTime;
+		double nextTime = System.currentTimeMillis() + SleepAddTime;
 		//ゲームループ
 		//このままだと10ミリ秒+描画時間で微妙に遅くなっている。
 		//TODO : 60fpsに制限する処理
@@ -78,7 +79,7 @@ class GameWindow extends JFrame implements Runnable{
 				if ( res < 0 ) res = 0;
 				Thread.sleep(res);
 				repaint();
-				nextTime += sleepAddTime;
+				nextTime += SleepAddTime;
 			}
 			catch(InterruptedException e)
 			{
@@ -123,6 +124,7 @@ class BaseScene extends JPanel
 
 	public void Update(Graphics g)
 	{
+		if(KeyInput.pressedKey[KeyEvent.VK_F1]) Main.DebugMode = !Main.DebugMode;
 		if(Main.DebugMode)
 		{
 			Font d;

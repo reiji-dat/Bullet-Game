@@ -9,7 +9,7 @@ public class SEPlayer
 	//サウンドデータ
 	private AudioManager[] sound = {new AudioManager("audio/select.wav"),new AudioManager("audio/attack.wav"),new AudioManager("audio/damage.wav"),
 								new AudioManager("audio/clear.wav"),new AudioManager("audio/gameover.wav"),new AudioManager("audio/boss-damage.wav")
-								,new AudioManager("audio/weakness.wav")};
+								,new AudioManager("audio/Weakness.wav")};
 
 	/**
 	 * SEの種類

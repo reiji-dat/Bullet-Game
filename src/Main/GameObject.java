@@ -111,12 +111,14 @@ public class GameObject extends JPanel{
 	}
 
 	/**
-	 * 指定したベクトル分動かす
+	 * 指定したベクトル分動かす。
 	 * @param v 方向ベクトル
 	 */
 	public void MovePostion(Vector2 v)
 	{
-		postion.plus(v);
+		Vector2 temp = new Vector2(v);
+		temp.times(Time.GetDeltaTime());
+		postion.plus(temp);
 	}
 
 	//継承先で以下の3つを使い処理を変える。

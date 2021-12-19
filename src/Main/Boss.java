@@ -84,10 +84,12 @@ public class Boss extends GameObject
 			HitBullet();
 			if(stateTimer >= 10000)
 			{
+
 				invincible = true;
 				stateTimer -= 10000;
 				atkChangeTimer = 0;
 			}
+			visible = Math.sin(stateTimer / 200) <= 0.95f;//sin波を利用(数字はちょうどいい感じに調整)
 		}
 		super.Update(g);
 	}
@@ -110,7 +112,7 @@ public class Boss extends GameObject
 			{
 				moveTime = (int)(Math.random()*2000)+3000;
 				velocity = new Vector2(Vector2.DegreeToVector((float)Math.random()*360));
-				velocity.division(4);
+				velocity.times(30);
 			}
 			move = !move;//状態反転
 		}
@@ -119,7 +121,7 @@ public class Boss extends GameObject
 		{
 			velocity.times(-1);
 		}
-		MovePostion(velocity );
+		MovePostion(velocity);
 	}
 
 	/**
@@ -156,12 +158,12 @@ public class Boss extends GameObject
 					for(int i = 100; i < 400;i+=100)
 					{
 						ObjectManager.Instantiate(
-								new Bullet("image/enemy_bullet.png", new Vector2(i, 0), new Vector2(0, 3), Tag.BossBullet));
+								new Bullet("image/enemy_bullet.png", new Vector2(i, 0), new Vector2(0, 200), Tag.BossBullet));
 					}
 					for(int i = 100; i < 500;i+=100)
 					{
 						ObjectManager.Instantiate(
-								new Bullet("image/enemy_bullet.png", new Vector2(0, i), new Vector2(3, 0), Tag.BossBullet));
+								new Bullet("image/enemy_bullet.png", new Vector2(0, i), new Vector2(200, 0), Tag.BossBullet));
 					}
 					break;
 				case Pick:
@@ -173,7 +175,7 @@ public class Boss extends GameObject
 										new Vector2(firePos),
 										new Vector2(Vector2.DegreeToVector(deg + i)),
 										Tag.BossBullet));
-						b.velocity.times(3);
+						b.velocity.times(200);
 					}
 					break;
 				case Voluted:
@@ -185,7 +187,7 @@ public class Boss extends GameObject
 										new Vector2(firePos),
 										new Vector2(Vector2.DegreeToVector(data[dataIndex].angle1 + i)),
 										Tag.BossBullet));
-						b.velocity.times(3);
+						b.velocity.times(200);
 					}
 					data[dataIndex].angle1+=10;
 					break;
@@ -198,7 +200,7 @@ public class Boss extends GameObject
 										new Vector2(firePos),
 										new Vector2(Vector2.DegreeToVector(data[dataIndex].angle1 + i)),
 										Tag.BossBullet));
-						b.velocity.times(3);
+						b.velocity.times(200);
 
 						b = (Bullet)ObjectManager.Instantiate(
 								new Bullet(
@@ -206,7 +208,7 @@ public class Boss extends GameObject
 										new Vector2(firePos),
 										new Vector2(Vector2.DegreeToVector(data[dataIndex].angle2 + i)),
 										Tag.BossBullet));
-						b.velocity.times(3);
+						b.velocity.times(100);
 					}
 					data[dataIndex].angle1+=10;
 					data[dataIndex].angle2-=10;
@@ -214,11 +216,11 @@ public class Boss extends GameObject
 				case FireFlower:
 					for(int i = -180;i < 180;i+=60)
 						//花火はBossクラスの子として扱い、拡散時は親子関係を外す
-					ObjectManager.Instantiate(new FireFlower("image/enemy_bullet.png", new Vector2(firePos), new Vector2(Vector2.DegreeToVector(deg + i)),3, Tag.BossBullet));
+					ObjectManager.Instantiate(new FireFlower("image/enemy_bullet.png", new Vector2(firePos), new Vector2(Vector2.DegreeToVector(deg + i)),200, Tag.BossBullet));
 					break;
 				case Tracking:
 						//花火と同じく
-					ObjectManager.Instantiate(new Tracking("image/enemy_bullet.png", new Vector2(firePos), new Vector2(Vector2.DegreeToVector(deg)), 2, Tag.BossBullet));
+					ObjectManager.Instantiate(new Tracking("image/enemy_bullet.png", new Vector2(firePos), new Vector2(Vector2.DegreeToVector(deg)), 150, Tag.BossBullet));
 					break;
 			}
 		}
@@ -248,7 +250,7 @@ public class Boss extends GameObject
 			{
 				randomBulletTimer -= randomCoolTime;
 				Vector2 vel = new Vector2(Vector2.DegreeToVector((float) (Math.random() * 360)));
-				vel.times(1);
+				vel.times(100);
 				ObjectManager.Instantiate(
 						new Bullet(
 								"image/enemy_bullet.png",

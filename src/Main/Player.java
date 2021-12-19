@@ -8,9 +8,9 @@ import java.awt.event.KeyEvent;
  */
 public class Player extends GameObject{
 
-	private final float Speed = 3;		//プレイヤーの移動速度
-	private final float BulletSpeed = 5;	//弾の速度
-	public final int MaxHP = 5;			//最大体力
+	private final float Speed = 200;		//プレイヤーの移動速度
+	private final float BulletSpeed = 275;	//弾の速度
+	public final int MaxHP = 10;			//最大体力
 	public int hp = MaxHP;					//体力
 
 	public final int MaxMP = 50;			//最大弾数
@@ -50,7 +50,7 @@ public class Player extends GameObject{
 		if(invincible)//無敵時間は点滅する
 		{
 			invTimer += Time.flameTime;
-			visible = Math.sin(invTimer/20) <= 0 ? true : false;//sin波を利用(数字はちょうどいい感じに調整)
+			visible = Math.sin(invTimer/20) <= 0;//sin波を利用(数字はちょうどいい感じに調整)
 			if(invTimer>=InvTime)
 			{
 				visible = true;
@@ -66,10 +66,10 @@ public class Player extends GameObject{
 	private void Movement()
 	{
 		//移動
-		if(KeyInput.inputKey[KeyEvent.VK_W]) postion.y -= Speed;
-		if(KeyInput.inputKey[KeyEvent.VK_A]) postion.x -= Speed;
-		if(KeyInput.inputKey[KeyEvent.VK_S]) postion.y += Speed;
-		if(KeyInput.inputKey[KeyEvent.VK_D]) postion.x += Speed;
+		if(KeyInput.inputKey[KeyEvent.VK_W]) postion.y -= Speed * Time.GetDeltaTime();
+		if(KeyInput.inputKey[KeyEvent.VK_A]) postion.x -= Speed * Time.GetDeltaTime();
+		if(KeyInput.inputKey[KeyEvent.VK_S]) postion.y += Speed * Time.GetDeltaTime();
+		if(KeyInput.inputKey[KeyEvent.VK_D]) postion.x += Speed * Time.GetDeltaTime();
 
 		//移動制限
 		postion.x = postion.x < 0 ? 0 : postion.x;

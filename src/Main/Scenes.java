@@ -48,7 +48,7 @@ class TitleScene extends BaseScene
 
 		font = new Font(null,Font.PLAIN,16);
 		g.setFont(font);
-		Text.DrawString(g,"©2021 - 高橋怜児 var1.1.0-debug",400, 500, Text.AdjustWidth.Center,Text.AdjustHeight.Bottom);
+		Text.DrawString(g,"©2021 - 高橋怜児 var1.1.0",400, 500, Text.AdjustWidth.Center,Text.AdjustHeight.Bottom);
 	}
 
 	public void Start()

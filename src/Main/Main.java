@@ -14,7 +14,6 @@ package Main;
  * ゲームの難易度調整
  */
 
-//ここに起動系の処理がある。
 /**
  * 起動系の処理
  */
@@ -23,7 +22,7 @@ public class Main{
 	/**
 	 * デバッグモード
 	 */
-	public static final boolean DebugMode = true;
+	public static boolean DebugMode = false;
 
 	//デフォルトの画面サイズ
 	/**
