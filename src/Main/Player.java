@@ -9,7 +9,7 @@ public class Player extends GameObject{
 	public final int MaxHP = 5;//最大体力
 	public int hp = MaxHP;//体力
 
-	public final int MaxMP = 30;//最大弾数
+	public final int MaxMP = 50;//最大弾数
 	public int mp = MaxMP;//弾数
 	private int bulletTimer = 0;//MP回復用タイマー
 
@@ -88,10 +88,14 @@ public class Player extends GameObject{
 		}
 	}
 
+	int shotTime = 0;
+	final int shotCoolTime = 100;
 	private void ShotBullet()
 	{
-		if(KeyInput.pressedKey[KeyEvent.VK_SPACE] && mp > 0)
+		shotTime -= Time.flameTime;
+		if(KeyInput.inputKey[KeyEvent.VK_SPACE] && mp > 0 && shotTime <= 0)
 		{
+			shotTime = shotCoolTime;
 			SEPlayer.PlaySE(SEPlayer.SE.Attack);
 			mp--;
 			ObjectManager.Instantiate(new Bullet("image/player_bullet.png",new Vector2(postion.x,postion.y-10), new Vector2(0,-BulletSpeed), Tag.PlayerBullet));
@@ -102,10 +106,11 @@ public class Player extends GameObject{
 
 	private void HitBullet()
 	{
+
 		GameObject[] objs = ObjectManager.FindObjectsTag(Tag.BossBullet);
 		for(int i = 0; i < objs.length; i++)
 		{
-			if(!invincible && Collider.EnterCollider(postion, new Vector2(objs[i].postion), 3))
+			if(!invincible && Collider.EnterCollider(postion, new Vector2(objs[i].postion), 5))
 			{
 				SEPlayer.PlaySE(SEPlayer.SE.Damage);
 				invincible = true;

@@ -73,7 +73,7 @@ public class Boss extends GameObject
 		{
 			if(modeTimer >=  ModeChangeTime)
 			{
-				SEPlayer.PlaySE(SE.BossDamage);
+				SEPlayer.PlaySE(SE.Weakness);
 				invincible = false;
 				modeTimer -= ModeChangeTime;
 			}

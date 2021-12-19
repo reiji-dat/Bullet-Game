@@ -19,7 +19,7 @@ public class Tracking extends Bullet{
 	{
 		if(player == null) return;
 		//プレイヤーが近くなったらまっすぐ飛ぶようにする
-		if (Collider.EnterCollider(player.postion, new Vector2(postion),50))nearPlayer=true;
+		if (Collider.EnterCollider(player.postion, new Vector2(postion),40))nearPlayer=true;
 		if(!nearPlayer)//プレーヤーとの向きを調べ追尾する。
 		{
 			float ang = Vector2.Angle(new Vector2(postion.x, postion.y-10),new Vector2(player.postion));

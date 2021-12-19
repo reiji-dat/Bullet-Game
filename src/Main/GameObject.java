@@ -86,8 +86,6 @@ public class GameObject extends JPanel{
 		}
 
 		tag = _tag;
-		//ObjectManager.Instantiate(this);
-		System.out.println(tag.toString());
 	}
 
 	public void DrawObject(Graphics g)
@@ -126,6 +124,5 @@ public class GameObject extends JPanel{
 
 	public void OnDestroy()
 	{
-		System.out.println(tag + "を削除");
 	}
 }

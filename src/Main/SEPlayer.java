@@ -4,10 +4,9 @@ package Main;
 public class SEPlayer
 {
 	public static SEPlayer Instance = new SEPlayer();
-	private AudioManager sound[] =
-			new AudioManager[]{new AudioManager("audio/select.wav"),new AudioManager("audio/attack.wav"),new AudioManager("audio/damage.wav"),
-								new AudioManager("audio/clear.wav"),new AudioManager("audio/gameover.wav"),new AudioManager("audio/BossDamage.wav")
-								,new AudioManager("audio/Weakness.wav")};
+	private AudioManager[] sound = {new AudioManager("audio/select.wav"),new AudioManager("audio/attack.wav"),new AudioManager("audio/damage.wav"),
+								new AudioManager("audio/clear.wav"),new AudioManager("audio/gameover.wav"),new AudioManager("audio/boss-damage.wav")
+								,new AudioManager("audio/weakness.wav")};
 
 	enum SE
 	{
