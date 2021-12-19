@@ -2,14 +2,22 @@ package Main;
 
 import java.awt.Graphics;
 
+/**
+ * 花火クラス
+ */
 public class FireFlower extends Bullet{
-	final float DiffDistance = 150;//拡散する距離
-	float currentDist = 0;//発射されて進んだ距離
-	float speed;//速度
+	private final float DiffDistance = 150;	//拡散する距離
+	private float currentDist = 0;				//発射されて進んだ距離
+	private float speed;						//速度
 
-	boolean end = false;//拡散したか
-
-
+	/**
+	 * 花火クラス
+	 * @param img 画像相対パス
+	 * @param pos 場所
+	 * @param vel 方向ベクトル
+	 * @param spd 速度
+	 * @param tag タグ
+	 */
 	FireFlower(String img, Vector2 pos, Vector2 vel, float spd, Tag tag)
 	{
 		super(img, pos, vel, tag);

@@ -1,14 +1,19 @@
 package Main;
 
-
 import java.awt.Graphics;
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
+/**
+ * ゲームオブジェクトクラス
+ * このクラスもしくはこれを継承しているクラスは直接作らないでください
+ * 必ずObjectManagerのInstantiateを使って生成してください。
+ */
 public class GameObject extends JPanel{
 
+	//GameObjectは編集をしてほしくないためString型のタグにしたほうが良いかも？
 	public enum Tag
 	{
 		None,
@@ -24,7 +29,7 @@ public class GameObject extends JPanel{
 	public Vector2 postion;
 	public Vector2 size;
 	public Image[] image;
-	public boolean show = true;
+	public boolean visible = true;
 
 	GameObject(String img, Vector2 v)
 	{
@@ -66,7 +71,8 @@ public class GameObject extends JPanel{
 		Init(v, _size, _tag, img);
 	}
 
-	public void Init(Vector2 v, Vector2 _size, Tag _tag, String... img)
+	//初期化
+	private void Init(Vector2 v, Vector2 _size, Tag _tag, String... img)
 	{
 		postion = v;
 
@@ -75,7 +81,7 @@ public class GameObject extends JPanel{
 			image = new Image[img.length];
 			for(int i = 0; i < img.length; i++)
 			{
-				image[i] = String2Image.getImage(img[i]);
+				image[i] = StringToImage.getImage(img[i]);
 				ImageIcon icon = new ImageIcon(image[i]);
 				size = new Vector2(icon.getIconWidth(), icon.getIconHeight());
 			}
@@ -91,27 +97,29 @@ public class GameObject extends JPanel{
 	public void DrawObject(Graphics g)
 	{
 		int num = clamp(imageIndex, 0, image.length - 1);
-		if(show)
+		if(visible)
 			g.drawImage
 			(image[num], (int)((postion.x - size.x / 2) * Main.MagniWidth), (int)((postion.y - size.y / 2) * Main.MagniHeight),
 					(int)(size.x * Main.MagniWidth), (int)(size.y * Main.MagniHeight), this);
 	}
 
+	//TODO 自前のMathクラスを作りそちらに移す
 	private int clamp(int value, int min, int max) {
-	    if (value < min) {
-	        return min;
-	    } else if (value > max) {
-	        return max;
-	    }
-	    return value;
+	    if (value < min) return min;
+	    else if (value > max) return max;
+	    else return value;
 	}
 
-	//指定した数値分移動します
+	/**
+	 * 指定したベクトル分動かす
+	 * @param v 方向ベクトル
+	 */
 	public void MovePostion(Vector2 v)
 	{
 		postion.plus(v);
 	}
 
+	//継承先で以下の3つを使い処理を変える。
 	public void Update(Graphics g)
 	{
 		DrawObject(g);

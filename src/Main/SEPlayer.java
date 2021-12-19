@@ -1,13 +1,19 @@
 package Main;
 
-//SEを再生するクラス
+/**
+ * SEを再生するクラス
+ */
 public class SEPlayer
 {
 	public static SEPlayer Instance = new SEPlayer();
+	//サウンドデータ
 	private AudioManager[] sound = {new AudioManager("audio/select.wav"),new AudioManager("audio/attack.wav"),new AudioManager("audio/damage.wav"),
 								new AudioManager("audio/clear.wav"),new AudioManager("audio/gameover.wav"),new AudioManager("audio/boss-damage.wav")
 								,new AudioManager("audio/weakness.wav")};
 
+	/**
+	 * SEの種類
+	 */
 	enum SE
 	{
 		Select,
@@ -19,6 +25,10 @@ public class SEPlayer
 		Weakness
 	}
 
+	/**
+	 * SEを再生
+	 * @param se 再生したいSE
+	 */
 	public static void PlaySE(SE se)
 	{
 		int n = 0;

@@ -10,6 +10,8 @@ import java.util.List;
  */
 class CastClass<T>
 {
+	//エラー時の処理がそれぞれ異なるためboolで判断する。
+	//nullで返す、無視するなど
 	/**
 	 * ダウンキャストが出来るかチェック。
 	 * ダウンキャストとは継承先のクラスに変更すること。
@@ -19,14 +21,15 @@ class CastClass<T>
 	public boolean CheckDownCast(GameObject obj)
 	{
 		try {
+			//ここでエラーが発生しなければTrue
 			T a = (T)obj;
 			return true;
 		}catch(ClassCastException e)
 		{
+			//エラーが発生したらfalse
 			System.out.println("キャストが失敗しました！");
 			return false;
 		}
-
 	}
 }
 

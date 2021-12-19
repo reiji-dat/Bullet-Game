@@ -1,12 +1,19 @@
 package Main;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+/**
+ * シーン管理クラス
+ */
 public class SceneManager {
 
+	//判別するためには必要だが今回は使わない
+	/*
 	public enum Scene
 	{
 		None,
@@ -16,19 +23,23 @@ public class SceneManager {
 		GameOver,
 		Ranking
 	}
-
-	//判別するためには必要だが今回は使わない
-	//public static Scene currentScene = Scene.None;
-
+	public static Scene currentScene = Scene.None;
+	*/
 	public static GameWindow scene;
 }
 
 //JFrameを継承している。
+/**
+ * ウィンドウクラス
+ */
 class GameWindow extends JFrame implements Runnable{
-
-	BaseScene currentPanel;
+	public BaseScene currentPanel;
 
 	private Thread th = null;
+
+	private final int fps = 60;
+	//正確にしたいためdouble型
+	private final double sleepAddTime = 1000.0 / fps;
 
 	public GameWindow(String title, int width, int height)
 	{
@@ -55,14 +66,19 @@ class GameWindow extends JFrame implements Runnable{
 		if ( th != null ) th = null;//nullじゃなければnullにする。
 	}
 
+
 	public void run(){
+		double nextTime = System.currentTimeMillis() + sleepAddTime;
 		//ゲームループ
 		//このままだと10ミリ秒+描画時間で微妙に遅くなっている。
 		//TODO : 60fpsに制限する処理
 		while(th != null){
 			try{
-				Thread.sleep(10);	//10ミリ秒休む
-				repaint();			//再描画
+				long res = (long)nextTime - System.currentTimeMillis();
+				if ( res < 0 ) res = 0;
+				Thread.sleep(res);
+				repaint();
+				nextTime += sleepAddTime;
 			}
 			catch(InterruptedException e)
 			{
@@ -83,6 +99,9 @@ class GameWindow extends JFrame implements Runnable{
 	}
 }
 
+/**
+ * シーンの基本部分
+ */
 class BaseScene extends JPanel
 {
 	public void paintComponent(Graphics g)
@@ -90,11 +109,10 @@ class BaseScene extends JPanel
 		super.paintComponent(g);
 		Update(g);
 		Time.TimeCount();//1フレームの経過時間を計測
-		//TODO もうちょっといい方法があるかも？
 		ResetFrame();//キーやマウスの初期化
 	}
 
-	void ResetFrame()
+	private void ResetFrame()
 	{
 		KeyInput.resetBool();
 		MouseInput.pressed = false;
@@ -105,6 +123,15 @@ class BaseScene extends JPanel
 
 	public void Update(Graphics g)
 	{
+		if(Main.DebugMode)
+		{
+			Font d;
+			d = new Font("ＭＳ Ｐゴシック",Font.BOLD,10);
+			g.setFont(d);
+			g.setColor(Color.BLUE);
+			Text.DrawString(g,Debug.FrameRate() + "FPS(精度低) 1フレーム" + Time.GetDeltaTime() + "秒",800, 0, Text.AdjustWidth.Right, Text.AdjustHeight.Top);
+			g.setColor(Color.BLACK);
+		}
 		//1フレームのみ読み込む
 		if(!start)
 		{
@@ -122,7 +149,6 @@ class BaseScene extends JPanel
 
 	public void OnDestroy()
 	{
-		System.out.println("全てを削除する");
 		ObjectManager.AllDestroyGameObjects();
 	}
 }

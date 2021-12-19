@@ -6,9 +6,11 @@ import java.net.URL;
 
 import javax.swing.JPanel;
 
-//文字列から画像に変換する処理
-public class String2Image extends JPanel{
-	public static String2Image Instance = new String2Image();
+/**
+ * 文字列から画像に変更する処理
+ */
+public class StringToImage extends JPanel{
+	public static StringToImage Instance = new StringToImage();
 	public static Image getImage(String img)
 	{
 		URL url = Instance.getClass().getResource(img);

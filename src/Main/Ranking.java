@@ -1,10 +1,23 @@
 package Main;
 
+/**
+ * ランキングクラス
+ */
 public class Ranking {
-	
-	boolean descending;//降順かどうか(大きい順)
-	int data[];
-	
+
+	/**
+	 * true:降順, false:昇順
+	 */
+	public boolean descending;//降順かどうか(大きい順)
+	/**
+	 * ランキングデータ
+	 */
+	public int data[];
+
+	/**
+	 * ランキングクラス
+	 * @param lng 要素数
+	 */
 	Ranking(int lng)
 	{
 		descending = true;
@@ -15,12 +28,23 @@ public class Ranking {
 		}
 		data = dt;
 	}
+
+	/**
+	 * ランキングクラス
+	 * @param lng 要素数
+	 * @param score 初期スコア(配列)
+	 */
 	Ranking(int lng, int... score)
 	{
 		descending = true;
 		Sort(lng, score);
 	}
-	
+
+	/**
+	 * ランキングクラス
+	 * @param lng 要素数
+	 * @param des true:降順, false:昇順
+	 */
 	Ranking(int lng,boolean des)
 	{
 		descending = des;
@@ -31,13 +55,25 @@ public class Ranking {
 		}
 		data = dt;
 	}
+
+	/**
+	 * ランキングクラス
+	 * @param lng 要素数
+	 * @param des true:降順, false:昇順
+	 * @param score 初期スコア(配列)
+	 */
 	Ranking(int lng, boolean des, int... score)
 	{
 		descending = des;
 		Sort(lng, score);
 	}
-	
-	void Sort(int lng, int score[])
+
+	/**
+	 * ソート
+	 * @param lng 要素数
+	 * @param score スコア(配列)
+	 */
+	private void Sort(int lng, int score[])
 	{
 		//バブルソート
 		for(int r = score.length - 1; r >= 1;r--)
@@ -67,11 +103,15 @@ public class Ranking {
 		for(int i = 0; i < dt.length; i++) dt[i] = i < score.length ? score[i] : k;
 		data = dt;
 	}
-	
-	//ランキングに値を追加する。(番人法を使う)
-	void Add(int score)
+
+	/**
+	 * ランキングに値を追加(要素数不変)
+	 * @param score 追加したい値
+	 */
+	public void Add(int score)
 	{
-		if(descending) 
+		//番人法
+		if(descending)
 		{
 			data[data.length - 1] = data[data.length - 1] < score ? score : data[data.length - 1];
 			for(int i = data.length - 2; i >= 0; i--)

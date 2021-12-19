@@ -1,22 +1,34 @@
 package Main;
 
+/**
+ * BGMを再生するクラス
+ */
 public class BGMPlayer {
 	public static BGMPlayer Instance = new BGMPlayer();
 
-	private final String f = "audio/";
+	//パス
+	private final String path = "audio/";
+	//BGM
 	private AudioManager sound[] =
-			new AudioManager[]{new AudioManager(f + "title.wav",0.5f),new AudioManager(f +"buttle.wav",0.5f)};
+			new AudioManager[]{new AudioManager(path + "title.wav",0.5f),new AudioManager(path +"buttle.wav",0.5f)};
 
-	enum BGM
+	/**
+	 * BGMの種類
+	 */
+	public enum BGM
 	{
 		Title,
 		Buttle
 	}
 
-	public static void PlayBGM(BGM se)
+	/**
+	 * BGMを再生。既に流れている場合は一度止めて最初から流す。
+	 * @param bgm BGMの種類
+	 */
+	public static void PlayBGM(BGM bgm)
 	{
 		int n = 0;
-		switch(se)
+		switch(bgm)
 		{
 			case Title:
 				n = 0;
@@ -28,6 +40,9 @@ public class BGMPlayer {
 		Instance.sound[n].PlayLoop();
 	}
 
+	/**
+	 * BGMを止める。
+	 */
 	public static void StopBGM()
 	{
 		for(int i = 0; i < Instance.sound.length; i++)

@@ -7,33 +7,31 @@ import Main.SEPlayer.SE;
 
 public class Boss extends GameObject
 {
-	final int e_Bullet_Cool = 64;//ランダム撃ちの頻度
-	int e_Bullet_Timer = 0;//敵のランダム撃ちタイマー
+	private final int randomCoolTime = 64;		//ランダム撃ちの間隔
+	private int randomBulletTimer = 0;			//ランダム撃ちのタイマー
 
-	int e_pBullet_Timer = 0;//パターン攻撃タイマー
+	private int patternBulletTimer = 0;		//パターン攻撃タイマー
 
-	final int MaxHP = 500;//最大体力
-	int hp = MaxHP;//体力
+	public final int MaxHP = 500;				//最大体力
+	public int hp = MaxHP;						//体力
 
-	int modeTimer = 0;//ボスの状態タイマー
-	final int ModeChangeTime = 25000;
+	private int stateTimer = 0;				//無敵か無敵じゃない状態タイマー
+	private final int StateChangeTime = 25000;//無敵か無敵じゃない状態遷移の時間
+	public boolean invincible = true;			//無敵かどうか
 
-	boolean invincible = true;//無敵かどうか
-	int atkChangeTimer = 0;//攻撃種類変更タイマー
+	private int atkChangeTimer = 0;			//攻撃種類変更タイマー
 
+	private int moveTimer = 0;					//動き関係タイマー
+	private int moveTime = 4000;				//動く(止まる)時間
+	private boolean move = false;				//動くか止まるか
+	private Vector2 velocity = new Vector2(Vector2.Zero);//進む方向ベクトル
 
-	int moveTimer = 0;//動き関係タイマー
-	int moveTime = 4000;//動く(止まる)時間
-	boolean move = false;//動くか止まるか
-	Vector2 velocity = new Vector2(Vector2.Zero);//スピード
-
-	//アニメーションタイマー
-	final int ChangeTime = 100;
-	int anmTimer = 0;
+	private final int ChangeTime = 100;		//アニメーション変更時間
+	private int anmTimer = 0;					//アニメーションタイマー
 
 	//クラスで状態遷移
 	//data[index]でパターンごと読み込む
-	AttackPatternData[] data = {
+	private AttackPatternData[] data = {
 			new AttackPatternData(AttackPattern.Closs, 500),
 			new AttackPatternData(AttackPattern.Pick, 333),
 			new AttackPatternData(AttackPattern.Voluted, 150),
@@ -43,21 +41,23 @@ public class Boss extends GameObject
 			};
 	private int dataIndex = 0;
 
+	/**
+	 * データを変更する
+	 * @param value 変更したい値
+	 */
 	private void SetDataIndex(int value)
 	{
 		dataIndex = value;
-		dataIndex = clamp(dataIndex ,0 ,data.length - 1);
+		dataIndex = Clamp(dataIndex ,0 ,data.length - 1);
 		data[dataIndex].Init();
 	}
 
+	//最大値と最小値の間に変更する。
 	//TODO : 自前のMathクラスを作成する。
-	private int clamp(int value, int min, int max) {
-	    if (value < min) {
-	        return min;
-	    } else if (value > max) {
-	        return max;
-	    }
-	    return value;
+	private int Clamp(int value, int min, int max) {
+	    if (value < min) return min;
+	    else if (value > max) return max;
+	    else return value;
 	}
 
 	Boss(Vector2 pos, Vector2 size,String... img) {super(pos, size,Tag.Boss, img);}
@@ -68,30 +68,33 @@ public class Boss extends GameObject
 
 		Animation();
 
-		modeTimer += Time.flameTime;
+		stateTimer += Time.flameTime;
 		if(invincible)
 		{
-			if(modeTimer >=  ModeChangeTime)
+			if(stateTimer >=  StateChangeTime)
 			{
 				SEPlayer.PlaySE(SE.Weakness);
 				invincible = false;
-				modeTimer -= ModeChangeTime;
+				stateTimer -= StateChangeTime;
 			}
 			Attack();
 		}
 		else //無敵じゃなければ
 		{
 			HitBullet();
-			if(modeTimer >= 10000)
+			if(stateTimer >= 10000)
 			{
 				invincible = true;
-				modeTimer -= 10000;
+				stateTimer -= 10000;
 				atkChangeTimer = 0;
 			}
 		}
 		super.Update(g);
 	}
 
+	/**
+	 * 動きの処理
+	 */
 	private void Movement()
 	{
 		moveTimer+=Time.flameTime;
@@ -106,7 +109,7 @@ public class Boss extends GameObject
 			else	//止まっていたら動く処理
 			{
 				moveTime = (int)(Math.random()*2000)+3000;
-				velocity  = new Vector2(Vector2.DegreeToVector((float)Math.random()*360));
+				velocity = new Vector2(Vector2.DegreeToVector((float)Math.random()*360));
 				velocity.division(4);
 			}
 			move = !move;//状態反転
@@ -114,11 +117,14 @@ public class Boss extends GameObject
 		//動ける範囲の制限
 		if(postion.x < 50 || postion.x > 350 || postion.y < 50 || postion.y > 200)
 		{
-			velocity .times(-1);
+			velocity.times(-1);
 		}
 		MovePostion(velocity );
 	}
 
+	/**
+	 * アニメーション
+	 */
 	private void Animation()
 	{
 		anmTimer+=Time.flameTime;
@@ -128,15 +134,19 @@ public class Boss extends GameObject
 		imageIndex = t;
 	}
 
+	/**
+	 * 攻撃処理
+	 */
 	private void Attack()
 	{
 		RandomAttack();
+
 		//パターン攻撃
-		e_pBullet_Timer += Time.flameTime;
-		if(e_pBullet_Timer >= data[dataIndex].patternTime)
+		patternBulletTimer += Time.flameTime;
+		if(patternBulletTimer >= data[dataIndex].patternTime)
 		{
 			Vector2 firePos = new Vector2(postion.x, postion.y-10);
-			e_pBullet_Timer -= data[dataIndex].patternTime;
+			patternBulletTimer -= data[dataIndex].patternTime;
 
 			GameObject player = ObjectManager.FindObjectsTag(Tag.Player)[0];
 			float deg = Vector2.Angle(new Vector2(postion.x, postion.y-10),new Vector2(player.postion));
@@ -212,6 +222,7 @@ public class Boss extends GameObject
 					break;
 			}
 		}
+
 		atkChangeTimer += Time.flameTime;
 		if(atkChangeTimer >= 5000)//パターン変更処理
 		{
@@ -220,19 +231,22 @@ public class Boss extends GameObject
 			SetDataIndex(next);
 
 			atkChangeTimer -= 5000;
-			e_pBullet_Timer = 0;
+			patternBulletTimer = 0;
 		}
 	}
 
+	/**
+	 * ランダム撃ち
+	 */
 	private void RandomAttack()
 	{
 		//花火時以外はランダム撃ちをする。
 		if(data[dataIndex].pattern != AttackPattern.FireFlower)
 		{
-			e_Bullet_Timer += Time.flameTime;
-			if(e_Bullet_Timer >= e_Bullet_Cool)
+			randomBulletTimer += Time.flameTime;
+			if(randomBulletTimer >= randomCoolTime)
 			{
-				e_Bullet_Timer -= e_Bullet_Cool;
+				randomBulletTimer -= randomCoolTime;
 				Vector2 vel = new Vector2(Vector2.DegreeToVector((float) (Math.random() * 360)));
 				vel.times(1);
 				ObjectManager.Instantiate(
@@ -245,11 +259,16 @@ public class Boss extends GameObject
 		}
 	}
 
+	/**
+	 * 当たり判定
+	 */
 	private void HitBullet()
 	{
+		//プレイヤーの弾を取得
 		GameObject[] objs = ObjectManager.FindObjectsTag(Tag.PlayerBullet);
 		for(int i = 0; i < objs.length; i++)
 		{
+			//矩形の当たり判定
 			if(objs[i].postion.x >= postion.x - size.x / 2
 					&& objs[i].postion.x <= postion.x + size.x / 2
 					&& objs[i].postion.y >= postion.y - size.y / 2
@@ -259,7 +278,6 @@ public class Boss extends GameObject
 				SEPlayer.PlaySE(SE.BossDamage);
 				ObjectManager.Destroy(objs[i]);
 				hp--;
-				break;
 			}
 		}
 	}
@@ -270,6 +288,10 @@ public class Boss extends GameObject
 	}
 }
 
+//Javaに構造体がないため代用
+/**
+ * 攻撃パターンのデータ
+ */
 class AttackPatternData
 {
 	public enum AttackPattern	//攻撃パターン
@@ -281,12 +303,33 @@ class AttackPatternData
 		FireFlower,//花火
 		Tracking	//追尾
 	}
+
+	/**
+	 * 攻撃パターン
+	 */
 	public final AttackPattern pattern;
+	/**
+	 * パターン変更時間
+	 */
 	public final float patternTime;
+
+	//増えるなら配列にする。
+	/**
+	 * 基準角その1
+	 */
 	public final float InitialAngle1;
+	/**
+	 * 基準角その2
+	 */
 	public final float InitialAngle2;
 
+	/**
+	 * 現在の角度その1
+	 */
 	public float angle1;
+	/**
+	 * 現在の角度その2
+	 */
 	public float angle2;
 
 	AttackPatternData(AttackPattern p, int time, float deg1, float deg2)
@@ -307,6 +350,9 @@ class AttackPatternData
 		Init();
 	}
 
+	/**
+	 * 初期化
+	 */
 	public void Init()
 	{
 		angle1 = InitialAngle1;

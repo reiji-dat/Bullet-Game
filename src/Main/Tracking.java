@@ -2,10 +2,23 @@ package Main;
 
 import java.awt.Graphics;
 
+//TODO マジックナンバーを消す
+/**
+ * 追尾弾の追加
+ */
 public class Tracking extends Bullet{
-	private Player player;
-	boolean nearPlayer = false;
-	float speed;
+	private Player player;					//ターゲット
+	private boolean nearPlayer = false;	//近くにプレイヤーがいるか
+	private float speed;					//速さ
+
+	/**
+	 * 追尾弾の追加
+	 * @param img 画像
+	 * @param pos 場所
+	 * @param vel 方向ベクトル
+	 * @param spd 速度
+	 * @param tag タグ
+	 */
 	Tracking(String img, Vector2 pos, Vector2 vel, float spd, Tag tag) {
 		super(img, pos, vel, tag);
 		speed = spd;
@@ -37,6 +50,8 @@ public class Tracking extends Bullet{
 
 	public void Start()
 	{
-		player = (Player)ObjectManager.FindObjectsTag(Tag.Player)[0];
+		GameObject[] obj = ObjectManager.FindObjectsTag(Tag.Player);
+		if(obj.length != 0 && new CastClass<Player>().CheckDownCast(obj[0]))
+			player = (Player)obj[0];
 	}
 }
